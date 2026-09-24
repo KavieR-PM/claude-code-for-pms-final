@@ -23,7 +23,28 @@ built from your own questions.
 ---
 
 ### 1.
+connect to my github repo at https://github.com/KavieR-PM/claude-code-for-pms-final.git
 
 ### 2.
+is there too much information in the claude.md currently? do we need to consolidate at all at this point?
 
 ### 3.
+why should I make the changes?
+
+### 4.
+did you perform the middle option?
+
+### 5.
+no, leave it for the purpose of this course. This is only a 6/7 class course
+
+### 6.
+I am a new Product manager that just joined the team give me an onboarding walkthrough on what is all going on with Rook Dispatch
+
+### 7.
+Where should I start?
+
+### 8.
+Read the tickets and summarize the four interviews to determine if it matches what the data shows and check the routing code.
+
+### 9.
+Who should I speak with first and what questions should I ask? Create an agenda for the discussion
