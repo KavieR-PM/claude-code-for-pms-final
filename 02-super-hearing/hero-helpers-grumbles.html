@@ -1,0 +1,305 @@
+<title>The Hero Helpers' Grumbles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+  :root {
+    --sky: #e6f1fb;
+    --card: #ffffff;
+    --ink: #1c2645;
+    --soft-ink: #4a5578;
+    --line: #c9d8ec;
+    --red: #e4513a;
+    --sun: #f4b223;
+    --grass: #2f9e63;
+    --grape: #7456cf;
+    --blue: #2f7ed8;
+    --off: #dde6f2;
+    --off-ink: #8e9bb5;
+    --bubble: #fff6d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --sky: #121a2e;
+      --card: #1d2742;
+      --ink: #f2f5ff;
+      --soft-ink: #b6c0da;
+      --line: #2f3b5e;
+      --red: #ff7a63;
+      --sun: #ffc94d;
+      --grass: #4fcf8a;
+      --grape: #a58bff;
+      --blue: #6aa9ff;
+      --off: #2a3453;
+      --off-ink: #6f7b99;
+      --bubble: #2b2a1f;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --sky: #121a2e;
+    --card: #1d2742;
+    --ink: #f2f5ff;
+    --soft-ink: #b6c0da;
+    --line: #2f3b5e;
+    --red: #ff7a63;
+    --sun: #ffc94d;
+    --grass: #4fcf8a;
+    --grape: #a58bff;
+    --blue: #6aa9ff;
+    --off: #2a3453;
+    --off-ink: #6f7b99;
+    --bubble: #2b2a1f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--sky);
+    color: var(--ink);
+    font-family: "Nunito", "Trebuchet MS", system-ui, sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    padding-inline: 16px;
+    padding-block: 32px 48px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 28px; }
+
+  h1, h2 {
+    font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", sans-serif;
+    line-height: 1.1;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 { font-size: clamp(40px, 8vw, 64px); font-weight: 800; }
+  h1 .pop { color: var(--red); }
+  h2 { font-size: clamp(28px, 5vw, 36px); font-weight: 800; }
+
+  .intro { display: grid; gap: 14px; max-width: 34ch; }
+  .intro p { margin: 0; font-size: 22px; }
+
+  .helpers { display: flex; flex-wrap: wrap; gap: 12px; }
+  .helper {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 3px solid var(--line);
+    border-radius: 999px; padding: 6px 16px 6px 6px;
+    font-weight: 800; font-size: 18px;
+  }
+
+  .face {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 20px;
+    color: #fff; flex: none;
+  }
+  .f-a { background: var(--blue); }
+  .f-d { background: var(--grape); }
+  .f-k { background: var(--grass); }
+  .f-h { background: var(--sun); color: #3a2a00; }
+  .face.off { background: var(--off); color: var(--off-ink); }
+
+  .grumbles { display: grid; gap: 22px; }
+  .grumble {
+    background: var(--card);
+    border: 4px solid var(--ink);
+    border-radius: 28px;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 20px;
+    align-items: start;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .pic { width: 110px; height: 110px; }
+  .pic svg { width: 100%; height: 100%; display: block; }
+  .body { display: grid; gap: 12px; }
+  .body p { margin: 0; }
+
+  .count { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .count .faces { display: flex; gap: 6px; }
+  .count .faces .face { width: 34px; height: 34px; font-size: 17px; }
+  .count strong { font-size: 20px; margin-left: 6px; }
+
+  .said {
+    background: var(--bubble);
+    border-radius: 20px;
+    padding: 14px 18px;
+    font-weight: 700;
+    position: relative;
+    margin-top: 6px;
+  }
+  .said::before {
+    content: "";
+    position: absolute; top: -12px; left: 28px;
+    border: 12px solid transparent; border-top: 0;
+    border-bottom-color: var(--bubble);
+  }
+  .said .who { display: block; font-weight: 800; color: var(--soft-ink); font-size: 16px; margin-top: 6px; }
+
+  .grownups {
+    border-top: 3px dashed var(--line);
+    padding-top: 18px;
+    font-size: 16px;
+    color: var(--soft-ink);
+    max-width: 65ch;
+    display: grid; gap: 8px;
+  }
+  .grownups p { margin: 0; }
+  .grownups strong { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .grumble { grid-template-columns: 1fr; padding: 18px; }
+    .pic { width: 88px; height: 88px; }
+  }
+</style>
+
+<main class="wrap">
+  <header class="intro">
+    <h1>What makes the <span class="pop">hero helpers</span> grumpy?</h1>
+    <p>Some superheroes have a grown-up helper. The helper watches a big computer screen and makes sure the hero is ready to go.</p>
+    <p>We talked to 4 helpers. Here's what made them grumpy.</p>
+    <div class="helpers" aria-label="The four helpers">
+      <span class="helper"><span class="face f-a">A</span>Ambrose</span>
+      <span class="helper"><span class="face f-d">D</span>Aunt Dot</span>
+      <span class="helper"><span class="face f-k">K</span>Kip</span>
+      <span class="helper"><span class="face f-h">H</span>Halloran</span>
+    </div>
+  </header>
+
+  <section class="grumbles">
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <rect x="30" y="14" width="44" height="76" rx="9" fill="var(--blue)"/>
+          <rect x="36" y="24" width="32" height="52" rx="4" fill="var(--card)"/>
+          <circle cx="45" cy="44" r="4" fill="var(--ink)"/>
+          <circle cx="59" cy="44" r="4" fill="var(--ink)"/>
+          <path d="M44 58 q8 -6 16 0" stroke="var(--ink)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M40 90 l-8 14 M64 90 l10 12" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M8 34 h14 M4 50 h18 M10 66 h12" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>The phone call runs away too fast</h2>
+        <p>The hero's phone buzzes with a job. But by the time they grab it, the job has zoomed off to another hero!</p>
+        <div class="count">
+          <span class="faces"><span class="face f-a">A</span><span class="face f-d">D</span><span class="face off">K</span><span class="face f-h">H</span></span>
+          <strong>3 out of 4 said this</strong>
+        </div>
+        <p class="said">"by the time he's actually got a thumb on the screen — it's gone. Gone to somebody else already."<span class="who">Aunt Dot</span></p>
+      </div>
+    </article>
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <path d="M55 16 c-18 0 -28 14 -28 32 v18 l-10 12 h76 l-10 -12 v-18 c0 -18 -10 -32 -28 -32z" fill="var(--sun)"/>
+          <circle cx="55" cy="88" r="9" fill="var(--sun)"/>
+          <circle cx="55" cy="14" r="5" fill="var(--sun)"/>
+          <path d="M12 30 q-6 12 0 24 M98 30 q6 12 0 24" stroke="var(--red)" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>All the beeps sound the same</h2>
+        <p>When a job comes in, every hero's alarm goes "bing!" The helpers can't tell whose it is. Some helpers don't hear it at all.</p>
+        <div class="count">
+          <span class="faces"><span class="face f-a">A</span><span class="face f-d">D</span><span class="face f-k">K</span><span class="face off">H</span></span>
+          <strong>3 out of 4 said this</strong>
+        </div>
+        <p class="said">"right now Mite and Gale both just go "bing" and I have to actually look to know which one."<span class="who">Kip</span></p>
+      </div>
+    </article>
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <circle cx="46" cy="46" r="28" fill="var(--card)" stroke="var(--grape)" stroke-width="8"/>
+          <path d="M66 66 l28 28" stroke="var(--grape)" stroke-width="12" stroke-linecap="round"/>
+          <rect x="34" y="40" width="10" height="4" rx="2" fill="var(--ink)"/>
+          <rect x="48" y="40" width="6" height="4" rx="2" fill="var(--ink)"/>
+          <rect x="34" y="50" width="20" height="4" rx="2" fill="var(--ink)"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>The words are too tiny to read</h2>
+        <p>The helpers have to squish their noses up to the screen to see anything. And at night, the screen is soooo bright.</p>
+        <div class="count">
+          <span class="faces"><span class="face f-a">A</span><span class="face f-d">D</span><span class="face f-k">K</span><span class="face off">H</span></span>
+          <strong>3 out of 4 said this</strong>
+        </div>
+        <p class="said">"at a glance I sometimes cannot tell engaged from available without leaning in."<span class="who">Ambrose</span></p>
+      </div>
+    </article>
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <path d="M50 96 l5 -20 l5 20z" fill="var(--soft-ink)"/>
+          <rect x="10" y="66" width="90" height="10" rx="5" fill="var(--grass)" transform="rotate(-18 55 71)"/>
+          <circle cx="24" cy="54" r="12" fill="var(--sun)"/>
+          <circle cx="16" cy="36" r="10" fill="var(--sun)"/>
+          <circle cx="32" cy="26" r="10" fill="var(--sun)"/>
+          <circle cx="90" cy="46" r="10" fill="var(--off)" stroke="var(--off-ink)" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Some heroes get lots of jobs, some get none</h2>
+        <p>One hero is SO busy and tired. Another hero sits at home all week waiting and waiting. Nobody knows why.</p>
+        <div class="count">
+          <span class="faces"><span class="face off">A</span><span class="face f-d">D</span><span class="face f-k">K</span><span class="face off">H</span></span>
+          <strong>2 out of 4 said this</strong>
+        </div>
+        <p class="said">"Mite thinks Mite's been forgotten. Gale's exhausted."<span class="who">Kip</span></p>
+      </div>
+    </article>
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <rect x="12" y="20" width="86" height="58" rx="8" fill="var(--blue)"/>
+          <rect x="20" y="28" width="70" height="42" rx="4" fill="var(--card)"/>
+          <text x="55" y="61" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="30" fill="var(--red)">?</text>
+          <rect x="44" y="80" width="22" height="10" fill="var(--blue)"/>
+          <rect x="32" y="90" width="46" height="7" rx="3" fill="var(--blue)"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>The screen forgets things</h2>
+        <p>The helper sets up the screen just right. Then, poof, it goes back to the way it was, and nobody tells them.</p>
+        <div class="count">
+          <span class="faces"><span class="face f-a">A</span><span class="face off">D</span><span class="face off">K</span><span class="face off">H</span></span>
+          <strong>1 out of 4 said this</strong>
+        </div>
+        <p class="said">"I'd rather it warned me the filter had reset than simply reset it."<span class="who">Ambrose</span></p>
+      </div>
+    </article>
+
+    <article class="grumble">
+      <div class="pic" aria-hidden="true">
+        <svg viewBox="0 0 110 110">
+          <path d="M18 42 l37 -18 l37 18 v40 l-37 18 l-37 -18z" fill="var(--sun)"/>
+          <path d="M18 42 l37 18 l37 -18 M55 60 v40" stroke="var(--ink)" stroke-width="3" fill="none"/>
+          <circle cx="84" cy="22" r="16" fill="var(--card)" stroke="var(--red)" stroke-width="5"/>
+          <path d="M84 12 v10 l7 5" stroke="var(--red)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>New hero gear takes forever</h2>
+        <p>When a hero's armor breaks, the helper asks for a new piece. It waits in a long line with boring stuff like shoelaces.</p>
+        <div class="count">
+          <span class="faces"><span class="face off">A</span><span class="face off">D</span><span class="face off">K</span><span class="face f-h">H</span></span>
+          <strong>1 out of 4 said this</strong>
+        </div>
+        <p class="said">"One queue, everything in it, doesn't matter if it's laces or plate."<span class="who">Halloran</span></p>
+      </div>
+    </article>
+
+  </section>
+
+  <footer class="grownups">
+    <p><strong>For the grown-ups:</strong> This page summarizes four console-research interviews Sofia Marino ran with Rook Dispatch handlers on 2–5 September 2026. Counts show how many of the four raised each theme. Quotes are verbatim.</p>
+    <p>The first and fourth grumbles are the Dispatch 4.2 issue: the 60-second offer timeout, and responders who stopped getting callouts. Nobody asked about them; the handlers raised them on their own. The last grumble is a Rook Supply issue. With only four people, treat the counts as a pattern, not a measure of how common each problem is.</p>
+  </footer>
+</main>
