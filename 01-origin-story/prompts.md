@@ -48,3 +48,23 @@ Read the tickets and summarize the four interviews to determine if it matches wh
 
 ### 9.
 Who should I speak with first and what questions should I ask? Create an agenda for the discussion
+
+### 10.
+yes commit and push it to Github
+
+### 11.
+I am using the token generated from Github but it is not getting accepted - what should I do next?
+
+### 12.
+how to do this "You should change the
+ownership and permissions of /opt/homebrew back to your
+user account"
+
+### 13.
+I entered the github token and I got the message Everything is up to date - what next?
+
+### 14.
+Thank you, create an artifact from the summarize and while you are doing that, it should be created as though the audience for the artifact is a 5 year old.
+
+### 15.
+Commit and push the file to Github

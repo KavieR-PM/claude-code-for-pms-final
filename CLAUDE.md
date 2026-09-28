@@ -146,6 +146,22 @@ called them noise, but check that before dismissing them.
   to Ravi in parallel, then Marcus, Helen and Nadia.
 - Keep this file as is for the course. Don't propose consolidating it.
 
+### Findings (session of 28 Sep 2026)
+- **Handler interviews** (`00-rook/feedback/interviews/`, Sofia's console
+  research, 2–5 Sep): callouts vanish before the responder can answer, 3/4
+  (Ambrose, Dot, Halloran); alerts easy to miss or indistinguishable, 3/4;
+  console hard to read (text size for Ambrose and Dot, dark mode for Kip),
+  3/4; uneven workload, 2/4 (Kip, Dot); filters silently reset, 1/4
+  (Ambrose); Supply requisition queue, 1/4 (Halloran). The two 4.2 themes
+  were volunteered, not asked about.
+- A kid-level version of that summary is at
+  `02-super-hearing/hero-helpers-grumbles.html`, published privately as
+  https://claude.ai/artifact/Dz1krL8jTULJdMW6QDo5uw. Republish from that
+  file path to keep the same link.
+- **Git:** `git push origin main` works from this Mac without prompting (a
+  GitHub token is saved in the keychain). Just push when asked. If it
+  fails, the token has probably expired.
+
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and
   `00-rook/feedback/` (tickets and interviews).
