@@ -155,8 +155,9 @@ called them noise, but check that before dismissing them.
   (Ambrose, Dot, Halloran); alerts easy to miss or indistinguishable, 3/4;
   console hard to read (text size for Ambrose and Dot, dark mode for Kip),
   3/4; uneven workload, 2/4 (Kip, Dot); filters silently reset, 1/4
-  (Ambrose); Supply requisition queue, 1/4 (Halloran). The two 4.2 themes
-  were volunteered, not asked about.
+  (Ambrose); Supply requisition queue, 1/4 (Halloran). Vanishing offers
+  were volunteered by all three who raised them. Quiet weeks were raised
+  unprompted only by Kip; Dot's came after Sofia asked.
 - A kid-level version of that summary is at
   `02-super-hearing/hero-helpers-grumbles.html`, published privately as
   https://claude.ai/artifact/Dz1krL8jTULJdMW6QDo5uw. Republish from that

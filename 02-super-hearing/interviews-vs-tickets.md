@@ -10,21 +10,25 @@ who was actually cut off. Put together, they find all four.
 
 ## Why prioritize this now
 
-> 4.2 didn't just make offers harder to catch. It knocked four busy,
-> reliable responders out of rotation after a single bad week, and our
-> scoring has no way to bring them back: in one responder's words,
-> *"starting to wonder if im still even in the system."* Every week we
-> wait, their work piles onto fewer people (*"Mite thinks Mite's been
-> forgotten. Gale's exhausted."*), and those busiest responders are one
-> bad week away from the same spiral. Because we're paid per active
-> responder, and the people hit hardest are the ones *not* filing tickets,
-> this will show up as lost customers before it shows up on a dashboard.
-> Fixing the timeout and the scoring in the next release costs far less
-> than winning these responders back later.
+> 4.2 knocked four busy, reliable responders out of rotation after a
+> single bad week, and our scoring has no way to bring them back: in one
+> responder's words, *"starting to wonder if im still even in the
+> system."* That fear has spread well beyond those four. About 4 in 10
+> callout tickets essentially ask "is my account broken?", mostly from
+> responders who are still getting work, because nobody can see what
+> they've been offered or missed. Meanwhile the work is piling onto fewer
+> people (*"Mite thinks Mite's been forgotten. Gale's exhausted."*), and
+> overload is the one problem support will never hear about until those
+> responders start missing offers too. Because we're paid per active
+> responder, this will show up as lost customers before it shows up on a
+> dashboard. We should fix the timeout and the scoring in the next
+> release, and give responders a view of their recent offers so they stop
+> guessing.
 
 "Four responders" and "one bad week" come from the undocumented callout CSV
 and a simulation of the scoring rules. Until Wen and Ravi confirm them, open
-with "our early data suggests."
+with "our early data suggests." "4 in 10" counts tickets, not responders,
+and three people wrote more than a third of them.
 
 ## Problem areas at a glance
 
@@ -63,7 +67,7 @@ thirds."
 
 - **The two 4.2 problems are real, and they're linked.** Five tickets tell
   the same story: *"first one in weeks and it vanished before i could even
-  swipe"* (T-023). That's exactly the connection Dot made without prompting.
+  swipe"* (T-023). That's the connection Dot made once Sofia asked about quiet weeks.
   A responder who rarely gets offers loses the few they get to the
   60-second timeout, which pushes their score down further.
 - **The timing lines up with the release.** Tickets point to 12 August
@@ -373,3 +377,96 @@ exact ticket dates instead.
   were cut off didn't recover at all.
 - **The release week is the turning point.** Nothing changed in how much
   work went out, and a lot changed in who got it.
+
+## Loud in one pile, quiet in the other
+
+### Loud in the interviews, rare or absent in the tickets
+
+| Theme | Interviews | Tickets | Example |
+|---|---|---|---|
+| **Alerts easy to miss or indistinguishable** | 3 of 4 | 0 | *"right now Mite and Gale both just go "bing""* (Kip) |
+| **Console hard to read** (text size, no dark mode) | 3 of 4 | 0 | *"at a glance I sometimes cannot tell engaged from available"* (Ambrose) |
+| **The handler's own needs**: tell *me* when something comes in | 2 of 4 | 0 | *"maybe something that tells me too, not just him"* (Dot) |
+| **Overload** | 1 of 4 | 0 | *"Gale's exhausted."* (Kip) |
+| **Why it's happening, not just what** | 2 of 4 | 0 | *"a slower-arriving response of his still landed him the job more often than not"* (Ambrose) |
+| **Praise** (saved filters, maintenance scheduling) | 2 of 4 | 0 | *"I noticed within the hour"* (Ambrose, on filters) |
+| **Supply** (requisitions, failure reports, catalog) | 1 of 4 | 0 | *"it goes into a void"* (Halloran) |
+
+### All over the tickets, rarely or never raised in the interviews
+
+| Theme | Tickets | Interviews | Example |
+|---|---|---|---|
+| **"Phone never goes off" as the main complaint** | 16 of 25 (64%) | 2 of 4, only 1 unprompted | *"nothing all week?? is this thing broken"* (T-006) |
+| **"Is my account broken?"** | about 10 (40%) | 1, second-hand (Kip relaying Mite) | *"starting to wonder if im still even in the system"* (T-013) |
+| **Asking Rook for an answer** | about 6 handler tickets | 0 as a request | *"I'd like something more to tell her than 'I don't know.'"* (T-018) |
+| **No way to see their own history** | 1 (T-008) | 0 | *"she asked if there was a way to see her own history and I had to tell her there isn't"* |
+| **Emotional harm to responders** | 5+ | 0 | *"landed badly"* (T-019), *"pretty hard on her"* (T-025) |
+| **Precise dates and counts** | Most handler tickets | 0 | *"no callouts since the 12th ... nine days straight"* (T-008) |
+
+### Why they differ
+
+- **Different channels.** Tickets are filed when something feels broken,
+  and this folder is probably filtered to callout issues. The interviews
+  were console research, so callout issues only came up when handlers
+  raised them.
+- **Different speakers.** Tickets speak for the responder and are anxious.
+  Interviews speak for the handler and are calm. Nobody files a ticket
+  saying "too much work," so overload only shows up in an interview.
+- **Different strengths.** Tickets give dates and emotion but not causes.
+  Interviews give causes but not scale.
+
+**What this means:** the biggest ticket theme ("is my account broken?") is
+a visibility problem nobody in the interviews was asked about. The biggest
+interview themes (alerts, readability) don't appear in support data, so
+check with Nadia whether console tickets exist. Overload is the blind
+spot: support won't see it until the busiest responders start missing
+offers.
+
+## If both piles are telling the truth
+
+They can both be right because they describe **different slices of an
+uneven problem**. 4.2 didn't make things a little worse for everyone. It
+made things much worse for a few responders and slightly better for
+others. The average barely moved, but individual experiences went to
+opposite extremes. Kip shows it within one household: *"Mite thinks
+Mite's been forgotten. Gale's exhausted."*
+
+| They disagree on | How both can be true |
+|---|---|
+| **How widespread "quiet" is** (64% of tickets vs 1 of 4 interviews unprompted) | Tickets come from the affected, because people file when something hurts. The interviewees were picked for console research, so they're a mix: Bulwark is steady and Vantage is doing better than ever. |
+| **Tone** (anxious vs calm) | A ticket is a responder at their worst moment, often written from the phone. An interview is a handler weeks later, on a design call. Ambrose is calm in both of his, so the gap is who's speaking, not exaggeration. |
+| **Console issues** (interviews only) | The ticket folder is probably filtered to callout tickets, and the interviews were about the console. Each pile only contains what it was set up to collect. |
+| **Overload** (interviews only) | Nobody files a ticket saying "too much work." It surfaces only when someone asks. |
+| **Vanishing offers** (both agree) | The one problem that affects everyone, so both piles report it. That supports the idea that the other disagreements come from who each pile heard from. |
+
+### The hard case: tickets vs the callout data
+
+For 7 responders, the tickets say "nothing" while the data says 12–21
+pings a week. One way both could be partly true:
+
+- **"My phone never goes off" might be literally true even when offers
+  were sent.** In `offer.py`, an unanswered offer is silently removed from
+  the phone after 60 seconds (`withdraw_from_device`). A responder whose
+  phone is upstairs could have offers sent, timed out and removed without
+  ever noticing. The system counts those as sent, and penalizes them.
+- **A second lead:** 4.2 also shipped a fix for *"duplicate push
+  notification on re-offer."* If that fix stopped some notifications from
+  buzzing, offers would show up in the app but the phone would never go
+  off. This is only a hypothesis; ask Wen.
+
+**Where that stops working:** it explains high pings *sent*, not high
+pings *accepted*. The data shows Nightwell accepting 14–15 a week and
+Stormwrack 12–15. Nobody accepts that many jobs and then reports "nothing
+in 10 days." For those responders, both can't be right: either the CSV is
+labeled or measured differently than we think, or the tickets are wrong.
+That's the question for Ravi.
+
+### What this changes
+
+- **The two piles are complementary, not contradictory.** Tickets
+  over-represent the hurt, and interviews over-represent the fine. It's a
+  distribution problem, which is why the overall acceptance rate hid it.
+- **The best single test:** an offer log showing *sent → delivered →
+  notified → seen → accepted or timed out*, with timestamps, for Vesper
+  (cut off), Nightwell (contradicted) and Bulwark (steady). Ask Wen and
+  Ravi.
