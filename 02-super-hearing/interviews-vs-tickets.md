@@ -32,23 +32,30 @@ and three people wrote more than a third of them.
 
 ## Problem areas at a glance
 
-| # | Problem area | How big | Data | Tickets | Interviews | Confidence | Severity | Next step (who) |
-|---|---|---|---|---|---|---|---|---|
-| 1 | **Responders cut off by the scoring spiral** | 4 of 16 (25%) dropped from about 12 pings/wk to 0–3. About 45 pings/wk moved to others | ✅ All 4 | 2 of 4 found | 2 of 4 found | High that it happened. Medium on the cause | 🔴 High: permanent without a fix | Actual scores for everyone near the bottom of the ranking (Wen) |
-| 2 | **Offer timeout too short** (60s) | Acceptance 78% → 54% in release week. Others recovered to 74% | ✅ | 9 tickets, 8 responders | 3 of 4 | High | 🔴 High: it set off #1 | Declines vs timeouts, and answers in 60–90s (Ravi/Wen) |
-| 3 | **Affected responders who don't complain** | 2 of the 4 cut off filed 0 tickets | ✅ | ❌ Missed | ✅ By chance | High | 🔴 High: others may exist | Same score pull as #1. Contact the four handlers once confirmed |
-| 4 | **Fewer callouts accepted** | 133/wk → 96–120/wk (−10% to −28%). Pings sent flat | ✅ | — | — | Low on the cause | 🟠 Unknown: seasonal or unfilled? | Incidents and coverage gaps per week, including Aug 2025 (Ravi) |
-| 5 | **Tickets don't match the data** | 7 of 11 "quiet" responders are steady or rising. 4 complaints predate 4.2 | ✅ Conflict | ✅ Conflict | — | High that it exists. Cause unknown | 🟠 Medium | Offers sent vs delivered (Ravi). How tickets were selected (Nadia) |
-| 6 | **Work concentrated on fewer people** | Top-4 share 32% → 48% | ✅ | — | 1 of 4 | Medium | 🟡 Watch | Track weekly (Ravi) |
-| 7 | **Alerts easy to miss or hard to tell apart** | — | — | 0 | 3 of 4 | Medium | 🟡 Medium: makes #2 worse | Redesign input (Sofia) |
-| 8 | **Console hard to read** | — | — | 0 | 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) |
-| 9 | **Saved filters silently reset** | — | — | 0 | 1 of 4 | Low | 🟢 Low | Check for console tickets (Nadia) |
-| 10 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — | 0 | 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM |
+Updated 30 Sep 2026 with the ticket breakdown, the before/after comparison
+and the disagreement analysis. Last column: 🆕 new row · ⬆️ severity
+raised · ✏️ numbers or wording updated · — unchanged.
 
-Rows 1–3 are one problem: the timeout triggered the drop and the scoring
-rules made it permanent. Fixing only the timeout won't bring back the four
-responders already stuck at zero. Row 4 is what settles the seasonality
-argument.
+| # | Problem area | How big | Evidence (data · tickets · interviews) | Confidence | Severity | Next step (who) | Change |
+|---|---|---|---|---|---|---|---|
+| 1 | **Responders cut off by the scoring spiral** | 4 of 16 (25%) went from about 12 pings/wk to 0–3. They were good responders: 69–82% acceptance before | ✅ · 2 of 4 found · 2 of 4 found (Dot's only after a prompt) | High that it happened. Medium on cause | 🔴 High | Actual scores for everyone near the bottom of the ranking (Wen) | ✏️ |
+| 2 | **Offer timeout too short** (60s) | Acceptance 77% → 54% in release week | ✅ · 9 tickets (4 vanished + 5 rare-then-lost) · 3 of 4, all unprompted | High | 🔴 High | Declines vs timeouts, and answers in 60–90s (Ravi/Wen) | ✏️ |
+| 3 | **Nobody can see their own offers** ("is my account broken?") | About 10 tickets (40%). Missed offers are silently removed from the phone, and there's no history screen | Code · ✅ 40% · 1 second-hand | High that the gap exists | 🔴 High: spreads fear beyond the four. **Quick win** | "Your recent offers" view (Sofia/Wen) | 🆕 |
+| 4 | **Affected responders who don't complain** | 2 of the 4 cut off filed 0 tickets | ✅ · ❌ missed · by chance | High | 🔴 High | Same score pull as #1 | — |
+| 5 | **Notifications may not be firing** (4.2's re-offer push fix) | Unknown. Could explain "phone never goes off" | Release notes · consistent · — | Low: hypothesis | 🟠 Unknown | Check whether the push fix suppressed notifications (Wen) | 🆕 |
+| 6 | **Work concentrated on fewer people** | Top-4 share 32% → 48%. Their acceptance about 77% → 73% | ✅ · 0 · 1 of 4 (Kip) | Medium | 🟠 Medium (was 🟡): support will never see it | Track weekly. Watch the top 4's acceptance (Ravi) | ⬆️ |
+| 7 | **Fewer callouts accepted** | 132/wk → 111/wk (−16%) while pings sent fell only 6% | ✅ · — · — | Low on cause, leaning against a big seasonal drop | 🟠 Unknown | Incidents and coverage gaps per week, including Aug 2025 (Ravi) | ✏️ |
+| 8 | **Tickets don't match the data** | 14 of 25 tickets contradicted, 7 backed, 4 partial. 3 people wrote 36% | ✅ conflict · ✅ conflict · — | High that it exists. Partly explained (#3, #5), not for Nightwell | 🟠 Medium | Offer log (sent → delivered → seen → accepted/timed out) for Vesper, Nightwell, Bulwark (Wen/Ravi) | ✏️ |
+| 9 | **Alerts easy to miss or hard to tell apart** | — | — · 0 · 3 of 4 | Medium | 🟠 Medium (was 🟡): makes #2 and #3 worse, but won't fix #1 | Redesign input (Sofia) | ⬆️ |
+| 10 | **Console hard to read** | — | — · 0 · 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) | — |
+| 11 | **Saved filters silently reset** | — | — · 0 · 1 of 4 | Low | 🟢 Low | Ask whether console tickets exist (Nadia) | — |
+| 12 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — · 0 · 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM | — |
+
+Rows 1–4 are the core: the timeout triggered the drop, the scoring rules
+made it permanent, and nobody (including support) can see who's affected.
+Fixing only the timeout won't bring back the four responders already stuck
+at zero. Row 3 is the quick win to ship alongside the timeout and scoring
+fix. Row 7 is what settles the seasonality argument.
 
 ## Themes by source
 
@@ -324,7 +331,7 @@ don't.
 
 ### Where to focus
 
-1. **The root fix (problem areas 1–3).** The 7 tickets the data backs,
+1. **The root fix (problem areas 1, 2 and 4).** The 7 tickets the data backs,
    plus the rare-offer-then-lost tickets, all point to the timeout and the
    scoring rules.
 2. **A visibility gap you can close however the root cause turns out.** A
