@@ -8,6 +8,24 @@ Sources: `00-rook/feedback/interviews/` (4 handler interviews by Sofia Marino,
 they point at different responders. Neither one on its own finds everyone
 who was actually cut off. Put together, they find all four.
 
+## Why prioritize this now
+
+> 4.2 didn't just make offers harder to catch. It knocked four busy,
+> reliable responders out of rotation after a single bad week, and our
+> scoring has no way to bring them back: in one responder's words,
+> *"starting to wonder if im still even in the system."* Every week we
+> wait, their work piles onto fewer people (*"Mite thinks Mite's been
+> forgotten. Gale's exhausted."*), and those busiest responders are one
+> bad week away from the same spiral. Because we're paid per active
+> responder, and the people hit hardest are the ones *not* filing tickets,
+> this will show up as lost customers before it shows up on a dashboard.
+> Fixing the timeout and the scoring in the next release costs far less
+> than winning these responders back later.
+
+"Four responders" and "one bad week" come from the undocumented callout CSV
+and a simulation of the scoring rules. Until Wen and Ravi confirm them, open
+with "our early data suggests."
+
 ## Problem areas at a glance
 
 | # | Problem area | How big | Data | Tickets | Interviews | Confidence | Severity | Next step (who) |
