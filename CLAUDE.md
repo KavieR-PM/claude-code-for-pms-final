@@ -166,6 +166,32 @@ called them noise, but check that before dismissing them.
   GitHub token is saved in the keychain). Just push when asked. If it
   fails, the token has probably expired.
 
+### Findings (session of 30 Sep 2026)
+- **"The synthesis file"** means `02-super-hearing/interviews-vs-tickets.md`.
+  It holds the prioritization point of view, the 12-row problem-area table
+  (rows 1–4 are the core; row 3 is the quick win), and every split below.
+- **Tickets, broken down:** 16 quiet only, 5 rare offer then lost (the most
+  severe), 4 vanished only. 14 of 25 are contradicted by the CSV, 7 backed,
+  4 partial. Three people wrote 36%. About 40% ask "is my account broken?"
+  Some describe quiet stretches that started before 4.2.
+- **Visibility gap (quick win):** a timed-out offer is silently removed
+  (`withdraw_from_device`) and responders have no history screen, so they
+  can't tell "not offered" from "missed". Proposed fix: a "your recent
+  offers" view.
+- **Unverified lead:** 4.2's fix for duplicate re-offer pushes may have
+  stopped some notifications. Ask Wen.
+- **Before/after:** CSV weeks start on Monday; 4.2 shipped Wednesday 12 Aug,
+  so the release week is mixed. Pings sent −6%, accepted −16%, per-responder
+  range 6–16 → 0–21, top-4 share 32% → 48%. The cut-off four were good
+  responders (69–82% acceptance before), undone by one release week.
+  Bulwark had a near-identical week to Vesper's and survived (proximity?).
+  Kip's Mite vs Gale is the cleanest comparison.
+- **Piles reconciled:** tickets over-represent the hurt, interviews the fine;
+  it's a distribution problem. The one thing neither explains is Nightwell
+  and Stormwrack *accepting* 12–15/wk while reporting "nothing".
+- **Key ask for Wen/Ravi:** an offer log (sent → delivered → seen → accepted
+  or timed out) for Vesper, Nightwell and Bulwark.
+
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and
   `00-rook/feedback/` (tickets and interviews).
