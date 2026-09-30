@@ -137,8 +137,11 @@ called them noise, but check that before dismissing them.
   and Vantage. The aggregate "recovery" to 73% is partly those four leaving
   the denominator. Leading explanation: the timeout triggered it and the
   scoring rules locked it in. Unconfirmed until Wen pulls actual scores.
-- **Tickets vs data conflict:** 8 of the 10 "phone never goes off"
-  responders look busy in the CSV (e.g. Nightwell 18–21/wk). Mite and
+- **Tickets vs data conflict:** of the 11 responders with a "phone never
+  goes off" ticket, only 2 are cut off in the CSV (Farlight, The Undertow),
+  2 are somewhat down (Ashgrove, Halfmoon) and 7 are steady or rising
+  (e.g. Nightwell 18–21/wk). Full comparison in
+  `02-super-hearing/interviews-vs-tickets.md`. Mite and
   Vesper never filed tickets; they surfaced only in Sofia's interviews (Kip
   and Aunt Dot). The CSV's source and column definitions are unknown, so
   reconcile with Ravi before quoting either one.
