@@ -173,7 +173,7 @@ called them noise, but check that before dismissing them.
 
 ### Findings (session of 30 Sep 2026)
 - **"The synthesis file"** means `02-super-hearing/interviews-vs-tickets.md`.
-  It holds the prioritization point of view, the 12-row problem-area table
+  It holds the prioritization point of view, the 13-row problem-area table
   (rows 1–4 are the core; row 3 is the quick win), and every split below.
 - **Tickets, broken down:** 16 quiet only, 5 rare offer then lost (the most
   severe), 4 vanished only. 14 of 25 are contradicted by the CSV, 7 backed,
@@ -196,6 +196,36 @@ called them noise, but check that before dismissing them.
   and Stormwrack *accepting* 12–15/wk while reporting "nothing".
 - **Key ask for Wen/Ravi:** an offer log (sent → delivered → seen → accepted
   or timed out) for Vesper, Nightwell and Bulwark.
+
+### Findings (Module 3 session, 30 Sep 2026)
+- **Root cause (four analyst agents debated and agreed):** 4.2 caused it,
+  not August. The 60s timer started it; the scoring rules (timeout = decline,
+  miss costs more than an accept earns, no decay, one-at-a-time offers) lock
+  out anyone who stays below ~60% acceptance. One bad week alone isn't
+  enough: Bulwark recovered by going back to normal. The reweight didn't
+  cause the collapse (old weights would be worse) but moved work among the
+  other 12 and explains Ashgrove/Halfmoon. August: 0% of the collapse, at
+  most ~30% of the lower post-release volume.
+- **Still open: why those four kept missing** (about 3 of 25–32 accepted
+  after release): timer too short for them, phones not getting offers, or
+  choosing not to. Not chance, not just "leftover" callouts. Confidence:
+  high that scoring must be fixed, medium on the timer, low on "why these
+  four". The problem table has NOT been updated with this yet.
+- **Fix now regardless:** stop scoring timeouts as declines, add decay,
+  reset the four. Timer vs phone fix waits for the offer log.
+- **The one number for Helen:** 4 of 16 responders went from ~12 offers a
+  week to 0–1 (49 combined → 3), and none has recovered.
+- **Tipping point:** ranked by points lost in release week, the four are
+  exactly the bottom four (−0.52 to −0.24); Bulwark (−0.20) survived.
+- **Acceptance rate is misleading:** it "recovers" to 73% partly because the
+  four stopped being offered work; accepted offers are still 9% down.
+- **Ticket timing:** "vanished" tickets arrive in step with the numbers;
+  early "quiet" tickets precede and contradict the data; the true ones lag
+  1–2 weeks. Tally: 7 agree, 4 partly, 14 contradicted.
+- **Ask Wen for the offer log** (sent → reached phone → seen → declined /
+  timed out / tapped late with seconds → place in line → callout filled or
+  not) for the four plus Bulwark, Halfmoon, Ashgrove and Nightwell. Ask Ravi
+  for September (Halfmoon test: climbs back = score, stays low = proximity).
 
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and

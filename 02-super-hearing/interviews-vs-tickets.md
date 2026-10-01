@@ -791,3 +791,183 @@ can't show what a normal August looks like.
 exactly with the update and hit 4 responders hard while others got busier.
 "August made it a bit worse" is possible. To know for sure, ask Ravi for
 last August's numbers and for the number of incidents per week.
+
+## Two responders up close
+
+One responder whose story the data confirms (Vesper), and one of the nine
+"quiet" responders it doesn't (Nightwell). Scores are my estimate from
+applying the app's points rules to weekly numbers; only Wen can show the
+real ones.
+
+### Vesper (handler: Aunt Dot): numbers and complaints agree
+
+| Week starting | Pinged | Took | Missed | Rate | Score (estimate) |
+|---|---|---|---|---|---|
+| 29 Jun | 14 | 11 | 3 | 79% | top |
+| 6 Jul | 13 | 10 | 3 | 77% | top |
+| 13 Jul | 15 | 13 | 2 | 87% | top |
+| 20 Jul | 14 | 11 | 3 | 79% | top |
+| 27 Jul | 13 | 11 | 2 | 85% | top |
+| 3 Aug | 14 | 12 | 2 | 86% | top (1.0) |
+| **10 Aug** (update Wed 12th) | 12 | 6 | 6 | 50% | 0.76 ⬇ |
+| 17 Aug | 5 | 1 | 4 | 20% | 0.36 ⬇ |
+| 24 Aug | 2 | 0 | 2 | 0% | 0.12 ⬇ |
+| 31 Aug | 1 | 0 | 1 | 0% | 0 (bottom) |
+
+- **June to early August: a star.** 13–15 jobs a week, about 8 in 10
+  taken, score at the top.
+- **Update week: one bad week.** The timer dropped to 60 seconds. Dot says
+  the phone often buzzes downstairs while he's upstairs, and by the time
+  his thumb is on the screen *"it's gone."* 6 misses, and his score fell to
+  about three quarters.
+- **17 Aug: the slide starts.** Further back in line, so only 5 jobs,
+  arriving rarely and by surprise. Took 1. Score down to about a third.
+- **24 Aug: almost gone.** 2 jobs, probably ones nobody ahead of him
+  wanted. Took neither. Score near zero.
+- **31 Aug: stuck at the bottom.** 1 job, missed. Score at zero, and it
+  never comes back up on its own.
+- **At home,** Dot noticed *"stretches... where the phone just sits there
+  and sits there."*
+
+**In one line:** Vesper went from 14 jobs a week to 1 because of one bad
+week, not because he stopped being good at the job.
+
+### Nightwell (handler: Marjorie Sung): numbers and complaints clash
+
+| Week starting | Pinged | Took | Missed | Rate | Score (estimate) | What the tickets said |
+|---|---|---|---|---|---|---|
+| 29 Jun | 15 | 11 | 4 | 73% | top | |
+| 6 Jul | 14 | 10 | 4 | 71% | top | |
+| 13 Jul | 15 | 12 | 3 | 80% | top | |
+| 20 Jul | 16 | 12 | 4 | 75% | top | |
+| 27 Jul | 15 | 11 | 4 | 73% | top | |
+| 3 Aug | 15 | 12 | 3 | 80% | top (1.0) | |
+| **10 Aug** (update Wed 12th) | 16 | 9 | 7 | 56% | 0.88 ⬇ | |
+| 17 Aug | 18 | 14 | 4 | 78% | back to top ⬆ | T-004 (18 Aug): "Second week running with almost nothing." T-009 (22 Aug): "is my account broken. nothing in like 10 days" |
+| 24 Aug | 20 | 13 | 7 | 65% | top | T-011 (24 Aug): "first thing in ten days," and she missed it |
+| 31 Aug | 21 | 15 | 6 | 71% | top | |
+
+- **June to early August: the busiest hero in the file.** About 15 jobs a
+  week, about 3 in 4 taken.
+- **Update week: a bad week, not a disaster.** 7 misses, score down a
+  little to about 0.88. Still near the front of the line.
+- **17 Aug: bounced right back.** 18 jobs, 14 taken. Score back to the top.
+- **24 and 31 Aug: busier than ever.** 20, then 21 jobs a week, as work
+  from the four stuck responders moved to her.
+
+**The tickets say the opposite.** Her handler reported "almost nothing"
+for two weeks that show 16 and 18 jobs. Nightwell wrote "nothing in like 10
+days" in a week the data shows her taking 14.
+
+**How can both be true? Mostly, they can't.**
+
+- Missed jobs disappearing without a message could explain not noticing
+  missed jobs, but not 14 jobs she took.
+- A phone that doesn't buzz could explain fewer jobs taken, but she took
+  plenty.
+- The spreadsheet may count something different from what we think, or a
+  row may be labeled with the wrong responder. If so, the spreadsheet is
+  wrong for her, not the tickets.
+
+**In one line:** for Vesper, the numbers and complaints tell the same
+story; for Nightwell, they tell opposite stories, so she's the person to
+check first. Ask Ravi what "pinged" and "took" mean, and Wen for
+Nightwell's offer log. If the log shows 14 jobs taken that week, the
+tickets were wrong. If it shows none, the spreadsheet is wrong and
+everything built on it needs rechecking.
+
+## Root cause: what four analysts agreed on after debating
+
+Four analyst agents each explored one area of the callout data (testing
+fixes on paper, whether score predicts next week's offers, the responders
+who don't fit, and where the lost jobs went). They then read each other's
+findings, debated, and gave final positions. All work used the callout
+CSV, the routing code, tickets and interviews; none of it is confirmed by
+Wen or Ravi yet.
+
+### What all four agree on
+
+**The update caused this, not a quiet August.** It happened in three steps:
+
+1. **The shorter timer started it.** Going from 90 to 60 seconds made
+   everyone miss more offers in the release week.
+2. **The scoring rules made it permanent.** Timeouts count the same as
+   declines, a miss costs more than an accept earns, scores never drift
+   back, and offers walk down the list one at a time. Any responder who
+   kept accepting fewer than 6 in 10 slid to the back of the line and
+   stayed there. The four fell into exactly that trap.
+3. **The weight change is not why the four got stuck.** In simulation the
+   old weights made it worse. But it did decide which of the other 12
+   absorbed the work, and it explains Ashgrove's and Halfmoon's losses
+   (the reweight working as designed).
+
+**How much is August?** None of the release-week drop and none of the
+four's collapse. At most about 30% of the lower accepted volume after
+release could be fewer emergencies; the rest could be callouts going
+unfilled. The data can't separate those.
+
+### Who changed their mind in the debate
+
+- Analysts 2, 3 and 4 first said one bad week was enough to trap someone.
+  Analyst 1's simulation showed a responder who returns to normal (~70%)
+  recovers within 2–3 weeks, as Bulwark did.
+- Analyst 1 then found the bar is lower than it first thought: staying
+  just under 60% afterwards (e.g. 55%) is enough to stay locked out.
+- Analyst 4 revised its seasonal estimate from a flat 0–10% to the split
+  above, and now favours short local offer lists to explain its
+  accounting puzzle.
+- Analyst 3 demoted "local density" (a nearby rival absorbing the work)
+  from the explanation to a necessary condition, and stopped describing
+  Ashgrove and Halfmoon as early-stage lock-ins.
+
+### What they could not agree on: why those four kept missing
+
+After the release the four accepted about 3 of 25–32 offers. All agree
+that's neither chance (about a 1-in-10,000 result if their true rate were
+40%) nor just "leftover" callouts (modelling acceptance that falls with
+distance pushed measured acceptance the wrong way, and the gainers handled
+the extra work at normal rates).
+
+| Suspect | What it means | Leaning |
+|---|---|---|
+| Timer too short for them | They answer in 60–90 seconds, just too late | Analyst 3 |
+| Phones not getting the offer in time | 4.2 broke or delayed notifications on some devices | Analysts 2 and 4 |
+| Choosing not to | They stopped taking work | Nobody favours it; not ruled out |
+
+They also disagree about the CSV itself. Analyst 4 thinks names may be on
+the wrong rows or it counts offers that never reached a phone, and Analyst
+3 thinks it counts in a different unit. Either way, every finding depends
+on Ravi explaining it.
+
+**Combined confidence:** high that the scoring rules must be fixed; medium
+that the timer was the trigger; low on why it was these four.
+
+### What this means for the fix
+
+- **Fix only the scoring:** the four get offers again, but if their phones
+  are the problem, those offers still time out.
+- **Fix only the timer:** works only if they're answering slightly too
+  late, not if their phones aren't ringing.
+- **Safe to do now, whatever the answer:** stop scoring timeouts as
+  declines (protected the four in every simulation), let scores recover
+  over time, and reset the four stuck responders. Choose the timer or
+  phone fix once the offer log shows which one it is.
+
+### What they need (all four asked for the same thing)
+
+**An offer log from Wen, from 12 Aug**, for the four plus Bulwark,
+Halfmoon, Ashgrove and Nightwell, showing for each offer:
+
+1. When it was sent.
+2. When it reached the phone, and whether it was seen.
+3. Declined, timed out, or tapped too late, and how many seconds it took.
+4. The responder's place in line for that callout.
+5. Whether the callout was filled, unfilled or cancelled.
+
+No tap at all points to the phones; taps at 60–90 seconds point to the
+timer; declines point to choice. The log also settles the CSV mystery.
+
+**Also needed:** from Ravi, what the CSV actually counts, September's
+numbers (if Halfmoon's offers climb back it was the score; if they stay
+low, proximity), and incidents per week including Aug 2025. From Wen, real
+scores over time and travel time per offer.
