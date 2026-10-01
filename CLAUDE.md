@@ -123,6 +123,11 @@ called them noise, but check that before dismissing them.
   opinion from someone who made the 4.2 call, not ground truth.
 - When citing numbers, say where they came from: Ravi's official figures,
   Marcus's rough cut, or ticket counts.
+- **Explain things in plain, simple words** (about a 5th-grade level):
+  short sentences, everyday comparisons (like the "points game"), and always
+  say *why* something is happening, not just what. Keep the key numbers,
+  but explain what they mean. Files I ask you to write can stay detailed
+  unless I say otherwise.
 ### Findings so far (session of 23 Sep 2026)
 - **Routing code** (`00-rook/code/dispatch-routing/`): timeouts are scored
   exactly like declines (`offer.py:30`). Penalty 0.12 > credit 0.08, so a

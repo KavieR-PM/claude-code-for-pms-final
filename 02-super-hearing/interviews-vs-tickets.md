@@ -30,32 +30,97 @@ and a simulation of the scoring rules. Until Wen and Ravi confirm them, open
 with "our early data suggests." "4 in 10" counts tickets, not responders,
 and three people wrote more than a third of them.
 
+## In plain words
+
+*The whole story, simple enough for a fifth grader.*
+
+**The story.** Some heroes get jobs on their phones. When a job pops up,
+they tap "yes" to take it. On August 12, the company changed the app.
+
+**Problem 1: "The job ran away before I could tap it!"** The change gave
+heroes less time to say yes: 60 seconds instead of 90. So lots of jobs ran
+away to someone else. *Why?* Think of a hero upstairs when the phone buzzes
+downstairs. By the time they run down the stairs, the 60 seconds are up
+and the job is gone. With 90 seconds, they used to make it. The notes and
+the chart agree. ✅
+
+**Problem 2: "My phone never rings anymore!"** Only 4 heroes really
+stopped getting jobs. Here's why, we think.
+
+- **It's like a points game.** Every hero has a score, and the app offers
+  jobs to the highest scores first. Take a job: you get a few points ⬆️.
+  Miss a job or say no: you lose even more points ⬇️. Missing costs more
+  than taking earns, so you have to take more than half your jobs just to
+  stay even.
+- **One bad week changed everything.** Right after the change, lots of
+  jobs ran away because of the shorter timer. These 4 heroes had the
+  unluckiest week, lost lots of points and dropped to the bottom of the
+  line.
+- **At the bottom of the line, you almost never get picked.** You only get
+  asked if everyone above you says no. When a job finally came, it was a
+  surprise, they weren't ready, and it ran away too, so they lost even more
+  points.
+- **There's no way back.** Points never go back up by themselves. The only
+  way up is to take jobs, and they can't get any jobs to take. They're
+  stuck. 😞
+
+These 4 weren't bad heroes. Before the change, they were some of the best.
+One bad week knocked them down, and the game won't let them back up.
+
+**What about everyone else who said "my phone never rings"?** The chart
+says most of them were still getting plenty of jobs, so their notes don't
+match. Best guesses:
+
+- When a job runs away, it just disappears from the phone with no message.
+  A hero might never know they missed one.
+- Heroes can't see a list of the jobs they got or missed, so they're
+  guessing.
+- The phone might not be buzzing for some jobs, because of another change
+  in the same update.
+
+**Counting the notes:** 7 were right ✅, 4 were a little bit right 🤏, 14
+didn't match the chart ❌.
+
+**What we should do:**
+
+1. Give heroes more time to tap "yes" again.
+2. Fix the points game so a bad week doesn't stick forever, and help the 4
+   stuck heroes get back in line.
+3. Show heroes a list of the jobs they got and missed, so they stop
+   worrying their account is broken.
+4. Ask the grown-ups who built the app and the chart to check every job
+   and prove which guess is right.
+
 ## Problem areas at a glance
 
-Updated 30 Sep 2026 with the ticket breakdown, the before/after comparison
-and the disagreement analysis. Last column: 🆕 new row · ⬆️ severity
-raised · ✏️ numbers or wording updated · — unchanged.
+Updated 30 Sep 2026 with the ticket breakdown, the before/after comparison,
+the disagreement analysis and a closer read of the callout data (see "Data
+source: callout history" at the end). Last column, compared with the first
+version of this table: 🆕 new row · ⬆️ severity raised · ✏️ numbers or
+wording updated · — unchanged.
 
 | # | Problem area | How big | Evidence (data · tickets · interviews) | Confidence | Severity | Next step (who) | Change |
 |---|---|---|---|---|---|---|---|
-| 1 | **Responders cut off by the scoring spiral** | 4 of 16 (25%) went from about 12 pings/wk to 0–3. They were good responders: 69–82% acceptance before | ✅ · 2 of 4 found · 2 of 4 found (Dot's only after a prompt) | High that it happened. Medium on cause | 🔴 High | Actual scores for everyone near the bottom of the ranking (Wen) | ✏️ |
-| 2 | **Offer timeout too short** (60s) | Acceptance 77% → 54% in release week | ✅ · 9 tickets (4 vanished + 5 rare-then-lost) · 3 of 4, all unprompted | High | 🔴 High | Declines vs timeouts, and answers in 60–90s (Ravi/Wen) | ✏️ |
+| 1 | **Responders cut off by the scoring spiral** | 4 of 16 (25%) went from 49 offers a week combined to 3. Good responders before (69–87% acceptance). **None recovered:** 3 of 25 offers accepted since, 0 of 9 in the last two weeks | ✅ 40 rows · 2 of 4 found · 2 of 4 found (Dot's only after a prompt) | High that it happened. Medium on cause | 🔴 High: permanent without a fix | Actual scores for everyone near the bottom (Wen). A score reset or recovery mechanism, since a timeout change alone won't bring them back | ✏️ |
+| 2 | **Offer timeout too short** (60s) | Acceptance 77% → 54% in release week. The other 12 are still about 5 points down (75–79% → 69–74%) | ✅ · 9 tickets (4 vanished + 5 rare-then-lost) · 3 of 4, all unprompted | High | 🔴 High | Declines vs timeouts, and answers in 60–90s (Ravi/Wen) | ✏️ |
 | 3 | **Nobody can see their own offers** ("is my account broken?") | About 10 tickets (40%). Missed offers are silently removed from the phone, and there's no history screen | Code · ✅ 40% · 1 second-hand | High that the gap exists | 🔴 High: spreads fear beyond the four. **Quick win** | "Your recent offers" view (Sofia/Wen) | 🆕 |
 | 4 | **Affected responders who don't complain** | 2 of the 4 cut off filed 0 tickets | ✅ · ❌ missed · by chance | High | 🔴 High | Same score pull as #1 | — |
 | 5 | **Notifications may not be firing** (4.2's re-offer push fix) | Unknown. Could explain "phone never goes off" | Release notes · consistent · — | Low: hypothesis | 🟠 Unknown | Check whether the push fix suppressed notifications (Wen) | 🆕 |
-| 6 | **Work concentrated on fewer people** | Top-4 share 32% → 48%. Their acceptance about 77% → 73% | ✅ · 0 · 1 of 4 (Kip) | Medium | 🟠 Medium (was 🟡): support will never see it | Track weekly. Watch the top 4's acceptance (Ravi) | ⬆️ |
-| 7 | **Fewer callouts accepted** | 132/wk → 111/wk (−16%) while pings sent fell only 6% | ✅ · — · — | Low on cause, leaning against a big seasonal drop | 🟠 Unknown | Incidents and coverage gaps per week, including Aug 2025 (Ravi) | ✏️ |
-| 8 | **Tickets don't match the data** | 14 of 25 tickets contradicted, 7 backed, 4 partial. 3 people wrote 36% | ✅ conflict · ✅ conflict · — | High that it exists. Partly explained (#3, #5), not for Nightwell | 🟠 Medium | Offer log (sent → delivered → seen → accepted/timed out) for Vesper, Nightwell, Bulwark (Wen/Ravi) | ✏️ |
-| 9 | **Alerts easy to miss or hard to tell apart** | — | — · 0 · 3 of 4 | Medium | 🟠 Medium (was 🟡): makes #2 and #3 worse, but won't fix #1 | Redesign input (Sofia) | ⬆️ |
-| 10 | **Console hard to read** | — | — · 0 · 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) | — |
-| 11 | **Saved filters silently reset** | — | — · 0 · 1 of 4 | Low | 🟢 Low | Ask whether console tickets exist (Nadia) | — |
-| 12 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — · 0 · 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM | — |
+| 6 | **Work concentrated on fewer people** | The other 12 now get 98% of all offers (was 72%). Top-4 share 32% → 48%. Halfmoon nearly fell too | ✅ · 0 · 1 of 4 (Kip) | Medium | 🟠 Medium: support will never see it | Track weekly. Add Halfmoon to the offer-log request (Ravi/Wen) | ⬆️ |
+| 7 | **Fewer callouts filled** | Accepted pings 132/wk → 96, 104, 108, 120 (still −9%). About 100 fewer over four weeks. Pings sent also down 4–8% | ✅ · — · — | Low on cause: fewer incidents (seasonal) **or** callouts not filled through Dispatch | 🟠 Unknown: could be a hidden coverage problem | Weekly incidents, unfilled callouts and coverage gaps, including Aug 2025 (Ravi). Routing overrides since 12 Aug (Wen, audit log) | ✏️ |
+| 8 | **The headline metric hides the problem** | Acceptance rate "recovers" to 73% partly because the four stopped being offered work, while callouts filled stay down | ✅ · — · — | High | 🟠 Medium: leadership sees recovery that isn't there | Report callouts filled and coverage gaps alongside acceptance (Ravi) | 🆕 |
+| 9 | **Tickets don't match the data** | 14 of 25 tickets contradicted, 7 backed, 4 partial. 3 people wrote 36% | ✅ conflict · ✅ conflict · — | High that it exists. Partly explained (#3, #5), not for Nightwell | 🟠 Medium | Offer log (sent → delivered → seen → accepted/timed out) for Vesper, Nightwell, Bulwark, Halfmoon (Wen/Ravi) | ✏️ |
+| 10 | **Alerts easy to miss or hard to tell apart** | — | — · 0 · 3 of 4 | Medium | 🟠 Medium: makes #2 and #3 worse, but won't fix #1 | Redesign input (Sofia) | ⬆️ |
+| 11 | **Console hard to read** | — | — · 0 · 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) | — |
+| 12 | **Saved filters silently reset** | — | — · 0 · 1 of 4 | Low | 🟢 Low | Ask whether console tickets exist (Nadia) | — |
+| 13 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — · 0 · 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM | — |
 
 Rows 1–4 are the core: the timeout triggered the drop, the scoring rules
 made it permanent, and nobody (including support) can see who's affected.
 Fixing only the timeout won't bring back the four responders already stuck
 at zero. Row 3 is the quick win to ship alongside the timeout and scoring
-fix. Row 7 is what settles the seasonality argument.
+fix. Row 7 settles the seasonality argument, and row 8 is why the usual
+dashboard won't show any of this.
 
 ## Themes by source
 
@@ -477,3 +542,252 @@ That's the question for Ravi.
   notified → seen → accepted or timed out*, with timestamps, for Vesper
   (cut off), Nightwell (contradicted) and Bulwark (steady). Ask Wen and
   Ravi.
+
+## Why the four never recovered
+
+The data points to a trap: once they fell, the few offers they still got
+made things worse, and nothing in the system pulls them back up.
+
+### 1. They almost never accept the offers they still get
+
+| | Offers | Accepted | Rate |
+|---|---|---|---|
+| Before (weekly avg, all four) | 49 | 37 | 75% |
+| Three weeks after | 25 total | 3 total | 12% |
+| Last two weeks | 9 | 0 | 0% |
+
+Every miss costs 0.12 and a responder must accept at least 60% just to
+hold their score. At 12%, each offer they receive pushes them further down.
+
+### 2. Being last in line means getting the leftovers
+
+*An inference from the code, not shown directly by the CSV.* Offers go down
+the ranking one at a time, so a responder at the bottom is only reached
+when everyone above has already said no. The few callouts they see are
+probably the ones nobody else wanted. That would explain why their
+acceptance is so far below their own pre-release rate of 69–87%.
+
+### 3. Rare offers are easy to miss
+
+Before, they got about 12 offers a week, so an offer was routine. Now one
+arrives every week or two, unexpectedly, with 60 seconds to answer. Dot:
+*"by the time he's actually got a thumb on the screen — it's gone."* A
+missed rare offer lowers the score, which makes the next offer rarer still.
+
+### 4. The way out needs a floor they've fallen below
+
+Halfmoon had nearly the same release week (55%), then another poor one,
+then accepted 7 of 8 in the week of 31 Aug and climbed back. She could,
+because she kept getting 8–9 offers a week. None of the other 12 ever fell
+below 7 offers a week. The four fell to 0–5 within one week, so they never
+got enough chances to recover.
+
+### 5. It isn't their availability or setup
+
+Farlight's handler checked her availability window and found it set
+correctly (T-018). The Undertow is aquatic-tagged and incidents needing that
+tag kept coming (T-005). The interviews describe responders waiting by the
+phone, not stepping back.
+
+### Why it's permanent: the code
+
+`history.py` has no drift back toward neutral (Wen's 2019 TODO considered
+it and left it out). The only way to raise a score is to accept offers, and
+they barely get any. Scoring the weekly numbers with those rules sends all
+four to about 0 and keeps them there, while everyone else recovers.
+
+### What the data can't tell us
+
+- Declines vs timeouts: are they turning offers down or missing them?
+- Their actual rank and score today.
+- Whether anyone has come back since 31 Aug.
+
+All three come from Wen's offer log.
+
+**For the fix:** changing the timeout won't bring these four back, because
+they barely get offered anything. Getting them out needs a score reset or a
+recovery mechanism: a drift back toward neutral, or a minimum number of
+offers per week for every available responder.
+
+## Data source: callout history
+
+All figures below come from `00-rook/data/callout-history.csv`: 160 rows,
+16 responders × 10 weeks (29 Jun – 31 Aug 2026), with columns
+`week_starting`, `responder`, `handler`, `pings_sent`, `pings_taken`.
+`pings_taken` is treated as accepted offers. The file's origin and column
+definitions aren't documented, and Ravi hasn't checked it against the
+official figures. Weeks start on Monday; 4.2 shipped on Wednesday 12 Aug,
+so the week of 10 Aug is mixed.
+
+### Weekly totals: all 16, the four, the other 12
+
+| Week | Period | All: sent / taken | All: rate | Four: sent / taken | Four: rate | Four: share of offers | Other 12: sent / taken | Other 12: rate |
+|---|---|---|---|---|---|---|---|---|
+| 29 Jun | Before | 172 / 132 | 76.7% | 49 / 36 | 73.5% | 28.5% | 123 / 96 | 78.0% |
+| 6 Jul | Before | 170 / 131 | 77.1% | 48 / 37 | 77.1% | 28.2% | 122 / 94 | 77.0% |
+| 13 Jul | Before | 174 / 133 | 76.4% | 48 / 36 | 75.0% | 27.6% | 126 / 97 | 77.0% |
+| 20 Jul | Before | 176 / 132 | 75.0% | 50 / 37 | 74.0% | 28.4% | 126 / 95 | 75.4% |
+| 27 Jul | Before | 170 / 132 | 77.6% | 50 / 40 | 80.0% | 29.4% | 120 / 92 | 76.7% |
+| 3 Aug | Before | 172 / 134 | 77.9% | 49 / 37 | 75.5% | 28.5% | 123 / 97 | 78.9% |
+| **10 Aug** | **Release** | 177 / **96** | **54.2%** | 43 / 18 | **41.9%** | 24.3% | 134 / 78 | **58.2%** |
+| 17 Aug | After | 158 / 104 | 65.8% | **16** / 3 | 18.8% | 10.1% | 142 / 101 | 71.1% |
+| 24 Aug | After | 162 / 108 | 66.7% | **6** / 0 | 0% | 3.7% | 156 / 108 | 69.2% |
+| 31 Aug | After | 165 / 120 | 72.7% | **3** / 0 | 0% | **1.8%** | 162 / 120 | 74.1% |
+
+### Raw counts vs the pre-release average
+
+| Week | Sent | vs before | Taken | vs before | Missed | vs before | Rate |
+|---|---|---|---|---|---|---|---|
+| Before (6-week avg) | 172 | — | 132 | — | 40 | — | 77% |
+| 10 Aug | 177 | +3% | 96 | −27% | 81 | +103% | 54% |
+| 17 Aug | 158 | −8% | 104 | −21% | 54 | +35% | 66% |
+| 24 Aug | 162 | −6% | 108 | −18% | 54 | +35% | 67% |
+| 31 Aug | 165 | −4% | 120 | −9% | 45 | +13% | 73% |
+
+The rate recovers faster than the counts because the denominator shrank
+for a bad reason: offers to the four, who were missing them, mostly
+stopped. About 100 fewer offers were accepted over four weeks than at the
+old pace. Fewer offers accepted *and* sent means either fewer incidents
+(partly supporting the seasonal view) or callouts not being filled through
+Dispatch (a coverage problem). The CSV can't tell which.
+
+### Every row, by responder
+
+Each cell is one CSV row, `pings_sent/pings_taken`. The four cut-off
+responders are in bold.
+
+| Responder | Handler | 29 Jun | 6 Jul | 13 Jul | 20 Jul | 27 Jul | 3 Aug | 10 Aug | 17 Aug | 24 Aug | 31 Aug | Before → after (offers/wk) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **Farlight** | Linda Pruitt | 12/9 | 12/9 | 11/8 | 12/9 | 13/10 | 12/8 | 10/4 | 3/0 | 1/0 | 0/0 | 12.0 → 1.3 |
+| **Meteor Mite** | Kip | 11/7 | 12/9 | 10/6 | 11/7 | 12/9 | 11/8 | 10/4 | 4/1 | 2/0 | 1/0 | 11.2 → 2.3 |
+| **The Undertow** | Desmond Okafor | 12/9 | 11/9 | 12/9 | 13/10 | 12/10 | 12/9 | 11/4 | 4/1 | 1/0 | 1/0 | 12.0 → 2.0 |
+| **Vesper** | Aunt Dot | 14/11 | 13/10 | 15/13 | 14/11 | 13/11 | 14/12 | 12/6 | 5/1 | 2/0 | 1/0 | 13.8 → 2.7 |
+| The Gale | Kip | 13/10 | 12/9 | 13/10 | 14/11 | 13/11 | 13/10 | 15/9 | 17/12 | 20/14 | 21/16 | 13.0 → 19.3 |
+| Captain Vantage | Mr. Ambrose | 12/10 | 13/10 | 12/8 | 11/7 | 12/9 | 12/9 | 13/8 | 15/11 | 17/13 | 18/13 | 12.0 → 16.7 |
+| Nightwell | Marjorie Sung | 15/11 | 14/10 | 15/12 | 16/12 | 15/11 | 15/12 | 16/9 | 18/14 | 20/13 | 21/15 | 15.0 → 19.7 |
+| Sgt. Falkirk | Owen Bramwell | 10/9 | 10/8 | 11/8 | 10/8 | 9/7 | 10/8 | 11/7 | 13/9 | 15/11 | 16/11 | 10.0 → 14.7 |
+| Stormwrack | Renata Kovač | 13/10 | 13/11 | 12/9 | 14/12 | 13/10 | 13/10 | 14/8 | 16/12 | 18/13 | 19/15 | 13.0 → 17.7 |
+| Ironvale | Teresa Alvarez | 8/6 | 8/5 | 9/8 | 8/6 | 7/5 | 8/7 | 9/5 | 10/6 | 11/8 | 12/9 | 8.0 → 11.0 |
+| Cindermark | Farid Haddad | 9/7 | 9/8 | 8/6 | 10/7 | 9/7 | 9/8 | 10/6 | 11/8 | 12/8 | 12/9 | 9.0 → 11.7 |
+| Sgt. Bulwark | Halloran | 9/7 | 9/7 | 10/8 | 9/7 | 8/5 | 9/7 | 10/5 | 10/8 | 11/7 | 11/8 | 9.0 → 10.7 |
+| The Drift | Beatrice Calloway | 6/5 | 6/5 | 7/6 | 6/5 | 6/5 | 6/5 | 7/4 | 7/5 | 8/6 | 8/5 | 6.2 → 7.7 |
+| The Longcast | Graham Petrov | 7/5 | 7/5 | 8/7 | 7/5 | 7/5 | 7/5 | 8/5 | 8/6 | 9/5 | 9/7 | 7.2 → 8.7 |
+| Corporal Ashgrove | Yusuf Demir | 10/8 | 11/9 | 10/7 | 9/7 | 10/8 | 10/8 | 10/6 | 8/5 | 7/5 | 7/5 | 10.0 → 7.3 |
+| Halfmoon | Simone Fischer | 11/8 | 10/7 | 11/8 | 12/8 | 11/9 | 11/8 | 11/6 | 9/5 | 8/5 | 8/7 | 11.0 → 8.3 |
+
+**The one number for leadership:** 4 of 16 responders went from about 12
+offers a week to 0–1 (49 a week combined → 3), and none has recovered.
+
+## Tickets vs the callout data: who wrote in, and when the numbers moved
+
+They agree on offers vanishing and mostly disagree on going quiet. The
+vanishing tickets arrive in step with the numbers. The early, loud "quiet"
+tickets come before the data moves and contradict it. The true ones arrive
+one to two weeks after the numbers moved.
+
+### Timeline
+
+| Week | Tickets filed | Of which "vanished" | Of which "quiet" / rare-then-lost | All responders: acceptance | Pings accepted | The four: offers received |
+|---|---|---|---|---|---|---|
+| 3 Aug | 0 | — | — | 77.9% | 134 | 49 |
+| **10 Aug** (4.2 ships Wed 12th) | **2** (13, 14 Aug) | 1 | 1 | **54.2%** ⬇ | **96** ⬇ | 43 |
+| 17 Aug | 8 | 2 | 6 | 65.8% | 104 | **16** ⬇ |
+| 24 Aug | 8 | 1 | 7 | 66.7% | 108 | 6 |
+| 31 Aug | 7 | 0 | 7 | 72.7% | 120 | 3 |
+
+- **The first ticket came the morning after the release.** T-001 (13 Aug)
+  is about a callout lost on the evening of the 12th. Vanishing complaints
+  line up with the release-week acceptance drop.
+- **The first "quiet" ticket came on 14 Aug**, two days after the release,
+  describing six days of quiet. That starts before 4.2 shipped, and the
+  data shows Corporal Ashgrove getting 10 offers in each of those weeks.
+- **Offer volume only drops in the week of 17 Aug, and only for four
+  responders.** The "quiet" complaints started a week before the data
+  shows anyone going quiet.
+- **The tickets that do match came late.** The Undertow's matching tickets
+  start on 26 Aug and Farlight's on 30 Aug, one to two weeks after their
+  numbers fell. Mite and Vesper never wrote in.
+- **Ticket volume doesn't follow the numbers.** It held at about 8 a week
+  while acceptance was improving.
+
+### Ticket by ticket
+
+Each ticket is checked against the CSV weeks its own words cover
+(`sent/taken`).
+
+| Ticket | Filed | Responder | Says | Data for that period | Agree? |
+|---|---|---|---|---|---|
+| T-001 | 13 Aug | Captain Vantage | Offer moved on before he reached the phone | 10 Aug: 13/8 (5 missed) | ✅ Consistent |
+| T-002 | 14 Aug | Corporal Ashgrove | No callouts in 6 days | 3 Aug: 10/8, 10 Aug: 10/6 | ❌ (and starts before 4.2) |
+| T-003 | 17 Aug | Sgt. Falkirk | Gone before he opened the app | 17 Aug: 13/9 | ✅ Consistent |
+| T-004 | 18 Aug | Nightwell | Second week of almost nothing | 3 Aug: 15/12, 10 Aug: 16/9, 17 Aug: 18/14 | ❌ |
+| T-005 | 19 Aug | The Undertow | One callout since start of month | 3 Aug: 12/9, 10 Aug: 11/4, 17 Aug: 4/1 | ❌ Too early |
+| T-006 | 20 Aug | Corporal Ashgrove | Nothing all week | 17 Aug: 8/5 | ◐ A dip, not nothing |
+| T-007 | 20 Aug | The Longcast | Gone by the time he unlocked | 17 Aug: 8/6 | ✅ Consistent |
+| T-008 | 21 Aug | Ironvale | No callouts since the 12th | 10 Aug: 9/5, 17 Aug: 10/6 | ❌ |
+| T-009 | 22 Aug | Nightwell | Nothing in about 10 days | 10 Aug: 16/9, 17 Aug: 18/14 | ❌ |
+| T-010 | 23 Aug | Halfmoon | More than a week with nothing | 10 Aug: 11/6, 17 Aug: 9/5 | ◐ A dip, not nothing |
+| T-011 | 24 Aug | Nightwell | First offer in 10 days, then lost it | 17 Aug: 18/14, 24 Aug: 20/13 | ❌ |
+| T-012 | 25 Aug | The Longcast | Quiet this week | 24 Aug: 9/5 | ❌ |
+| T-013 | 26 Aug | The Undertow | Nothing again this week | 24 Aug: 1/0 | ✅ |
+| T-014 | 27 Aug | Stormwrack | Quietest since joining | 24 Aug: 18/13 | ❌ |
+| T-015 | 27 Aug | Cindermark | Switched while thumb on screen | 24 Aug: 12/8 | ✅ Consistent |
+| T-016 | 28 Aug | Sgt. Falkirk | Quiet again this past week | 17 Aug: 13/9, 24 Aug: 15/11 | ❌ |
+| T-017 | 29 Aug | Ironvale | Still nothing | 17 Aug: 10/6, 24 Aug: 11/8 | ❌ |
+| T-018 | 30 Aug | Farlight | Almost 2 weeks, no callouts | 17 Aug: 3/0, 24 Aug: 1/0 | ✅ |
+| T-019 | 31 Aug | The Undertow | First in 2 weeks, then lost it | 17 Aug: 4/1, 24 Aug: 1/0, 31 Aug: 1/0 | ✅ |
+| T-020 | 1 Sep | Cindermark | 10 days, 1 callout, lost it | 24 Aug: 12/8, 31 Aug: 12/9 | ❌ |
+| T-021 | 2 Sep | Halfmoon | Week 2 of nothing | 24 Aug: 8/5, 31 Aug: 8/7 | ◐ A dip, not nothing |
+| T-022 | 3 Sep | The Drift | About 3 weeks, 2 callouts | 7–8 a week throughout | ❌ |
+| T-023 | 3 Sep | The Drift | First in weeks, vanished | 7–8 a week throughout | ❌ On the "first in weeks" part |
+| T-024 | 4 Sep | Stormwrack | So dead lately | 24 Aug: 18/13, 31 Aug: 19/15 | ❌ |
+| T-025 | 5 Sep | Ironvale | First in about a month, lost it | 9–12 a week throughout | ❌ |
+
+**Tally:** 7 agree (the 4 "vanished" tickets are consistent with that
+week's misses, and 3 "quiet" tickets from the cut-off responders match), 4
+partly agree (real dips for Ashgrove and Halfmoon, but not "nothing"), and
+14 are contradicted.
+
+### Do they agree?
+
+- **On offers vanishing, yes.** Those tickets start the day after the
+  release, in the same week acceptance falls from 78% to 54%.
+- **On going quiet, mostly no.** Most "quiet" tickets come from responders
+  the data shows getting as many offers or more. Several describe quiet
+  that started before 4.2. Only the cut-off responders' tickets match, and
+  they arrive after their numbers moved.
+- **For some responders, the ticket and the data can't both be right.**
+  Nightwell accepted 14 offers in the week she reported "nothing in about
+  10 days." The Drift had 7–8 offers a week while his handler reported "2
+  callouts" in 3 weeks. Either the CSV measures something other than we
+  assume, or those tickets are wrong. Ravi needs to settle which, and Wen's
+  offer log (sent → delivered → seen → accepted/timed out) would answer it
+  directly.
+
+## Was it just a quiet August?
+
+Priya's view was that the drop was mostly August being quiet. **Short
+answer: mostly no, but the callout file can't settle it completely.** It
+only covers 29 Jun – 31 Aug 2026, with no data from last year, so it
+can't show what a normal August looks like.
+
+1. **Early August wasn't quiet.** The week of 3 Aug was the best week of
+   the summer (78 of every 100 offers accepted). The drop came all at once
+   in the week of the update (54 of 100). A season slows down gradually;
+   this was like flipping a switch.
+2. **A quiet month would hit everyone. This didn't.** 12 responders got
+   more offers than before, and 4 got almost none. A slow month doesn't
+   pick out four people; the scoring rules do. Kip's two responders show
+   it best: same city, same weeks, Meteor Mite went from 11 offers to 1
+   while The Gale went from 13 to 21.
+3. **One part could be August.** After the update, accepted offers fell
+   about 16% and offers sent fell 4–8%. That could mean fewer emergencies
+   (a quiet August) or callouts not getting filled. The file can't tell
+   which.
+4. **"It'll come back in September" can't be checked.** The file stops at
+   the end of August.
+
+**Verdict:** "it was just August" doesn't fit, because the drop started
+exactly with the update and hit 4 responders hard while others got busier.
+"August made it a bit worse" is possible. To know for sure, ask Ravi for
+last August's numbers and for the number of incidents per week.
