@@ -1053,10 +1053,13 @@ ranked by how likely testing each one is to identify the root cause.
 | **#8 A quiet August** | **If** August always has fewer emergencies, **then** part of the later drop is seasonal, **because** fewer emergencies means fewer jobs. | Last August shows a similar dip in emergencies | Emergencies were flat, and last August shows no dip | 🔴 **Low**: can't explain the update-week drop, at most a small slice after |
 | **#9 Skill jobs going to the wrong responders** | **If** skills only count 15%, **then** closer responders without the skill sometimes win skill jobs, **because** lacking the skill doesn't remove you from the line. | More skill jobs went to untagged responders after 12 Aug | The share didn't change | 🔴 **Low-medium**: a real risk, but a side effect |
 | **#10 The four chose not to** | **If** the four lost interest, **then** their misses are mostly "no" taps, **because** they're choosing to turn jobs down. | Most of their misses are "no" taps | Most of their misses are timeouts | 🔴 **Low**: they were among the most reliable responders before |
+| **#11 The 4.2 change applied to everyone equally** (Marcus's question) | **If** the live system uses the same code as our folder, **then** every responder (past decliners, reliable or new) was ranked with the same new weights (closeness 60%, recent yeses 25%), **because** the scoring formula has no check for history or "new vs existing." | For offers after 12 Aug, the ranking math matches the new weights for every responder, low-score and high-score alike | Some responders (e.g. past decliners or new joiners) were ranked with different weights or exempted | 🟢 **High**: one log with the score breakdown per offer settles it. Test alongside #4: same weights + scores carried over = applied to everyone with history kept; same weights + jump to 0.5 = everyone effectively restarted as "new" |
 
 **Data that settles most of the table:**
 
-- Real scores over time (Wen): #1, #4.
+- Real scores over time (Wen): #1, #4. Live weights plus a per-offer score
+  breakdown (closeness, recent yeses, skills) and scores just before/after
+  the install (Wen): #11 and #4.
 - The offer log (sent → reached phone → seen → yes / no / ran out / late
   tap, with seconds) (Wen): #2, #3, #5, #10. Late taps may only exist in
   phone-side logs, because `offer.py` stops listening at 60 seconds.
@@ -1090,3 +1093,70 @@ ranked by how likely testing each one is to identify the root cause.
 **Together:** #2 started the fire (a week of misses for everyone) and #1
 kept it burning for anyone who kept missing. That's why fixing only the
 timer won't bring the four back.
+
+## Points off, points back: every line in the code that changes a score
+
+### Taking points off
+
+**The trigger** (`offer.py:25–31`):
+
+```python
+for responder in routing.rank_for_callout(callout):
+    answer = offer_to(responder, callout)
+    if answer == ACCEPTED:
+        history.record_accepted(responder)
+        return responder
+    history.record_declined(responder)
+return None
+```
+
+Go down the line one responder at a time. A yes earns points and stops the
+search. **Anything else loses points** and moves to the next responder. The
+code only checks for "yes," so a "no" and running out of time land on the
+same line.
+
+**How many points** (`history.py:35–39`, amount in `config.py:19`):
+
+```python
+def record_declined(responder):
+    """They turned it down, or we ran out of time waiting. Score goes
+    down. Same either way — we asked and we didn't get a yes.
+    """
+    _set(responder, recent_acceptance(responder) - DECLINE_PENALTY)
+```
+
+Each miss subtracts **0.12** (out of 1.0). The note says it outright:
+*"Same either way."*
+
+### Everything that puts points back on
+
+Searching every file for anything that changes a score finds **exactly one
+thing that adds points**: accepting a job (`history.py:25–27`), worth
+**+0.08** (`config.py:18`).
+
+| Way you might expect to get points back | In the code? |
+|---|---|
+| Accepting a job | ✅ Yes: +0.08 |
+| Points slowly coming back over time | ❌ No. Wen's 2019 note asks and says *"Leaving it as-is for now"* (`history.py:30`) |
+| A manager or admin resetting a score | ❌ No reset anywhere |
+| Not counting "ran out of time" | ❌ No. Counts the same as "no" |
+| Bonus for finishing a job or long service | ❌ No |
+
+Two other things move a score, but not as rewards:
+
+- **The limits** (`history.py:42–43`): scores stay between 0 and 1. A
+  responder at 0 who misses stays at 0. This stops scores going lower but
+  never adds anything.
+- **Starting at the middle** (`history.py:22`): anyone missing from the
+  score list is treated as 0.5. If the list is ever wiped (e.g. a restart),
+  everyone goes back to 0.5. That's the only way a responder at 0 could
+  jump back up without taking jobs, and it's an accident of storage, not a
+  designed feature (see hypothesis #4).
+
+### Why this matters for the four stuck responders
+
+- **One way down (any non-yes), one way up (a yes).** A miss costs 0.12 and
+  a yes earns 0.08, so it takes 3 yeses to undo 2 misses.
+- **The only way up requires being offered jobs**, and a responder at the
+  bottom of the line almost never is. Nothing else adds points, so they
+  can't climb out.
