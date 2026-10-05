@@ -237,6 +237,36 @@ called them noise, but check that before dismissing them.
   show the rows (or a per-responder view) behind it too.
 - Problem table updated with the root-cause debate on 5 Oct.
 
+### Findings (Module 4 session, 5 Oct 2026)
+- **Routing code, in plain words:** `config.py` sets the dials, `availability.py`
+  says who's free and how far, `routing.py` lines them up, `offer.py` asks one
+  at a time, `history.py` keeps score. The **only** thing that adds points is
+  accepting (+0.08); nothing restores points over time and there's no reset.
+  Travel time, buzzing the phone and checking for answers are empty
+  placeholders here; the real code lives elsewhere.
+- **No location or travel-time data in the repo.** Clues only: Kip says Mite
+  and Gale share a city; routing is region-only (no mutual aid). Leads: the
+  console's coverage view shows incidents and required tags; Renata Kovač
+  (Stormwrack's handler) tracks his week against last year's.
+- **Hypotheses #1–#11** are in the synthesis file in If/Then/Because form.
+  #1 (points trap) and #2 (timer) lead. #11 is Marcus's question: the code
+  applies the new weights to everyone, but confirm with Wen alongside #4
+  (did the 4.2 install reset all scores to 0.5? scores live in memory).
+- **"Just configs"?** Within this folder, yes per the notes, but there's no
+  history to prove it, and 4.2 also shipped a push-notification fix
+  ("duplicate push on re-offer") outside this folder, which strengthens #3.
+- **4.2 had no real spec:** three one-line roadmap items, no success
+  measures. The reweight matched Priya's intent; "timeout tuning" had no
+  target; Availability Confidence was committed but never built and Helen
+  wasn't told. Write a short spec before the next fix.
+- **Recommended plan:** one combined request to Wen (offer log, real scores,
+  live settings, code diff, push fix) and one to Ravi; push two safe fixes
+  into the next release (stop scoring timeouts as declines, reset the four);
+  start Sofia on a "recent offers" view; don't roll back 4.2 wholesale.
+- **Slack:** the connected Slack is a real workspace (product-school). Only
+  post when I explicitly ask and name the channel. The Marcus reply was
+  drafted but not sent (Marcus is fictional).
+
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and
   `00-rook/feedback/` (tickets and interviews).
