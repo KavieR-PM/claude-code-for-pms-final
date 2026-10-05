@@ -978,3 +978,115 @@ timer; declines point to choice. The log also settles the CSV mystery.
 numbers (if Halfmoon's offers climb back it was the score; if they stay
 low, proximity), and incidents per week including Aug 2025. From Wen, real
 scores over time and travel time per offer.
+
+## How the routing code explains what we saw
+
+Source: `00-rook/code/dispatch-routing/`. Five working files: `config.py`
+(the settings: timer, weights, points), `availability.py` (who's free and
+how far away), `routing.py` (lines them up), `history.py` (keeps score),
+`offer.py` (does the asking).
+
+### The journey, in plain words
+
+1. Something goes wrong and becomes a job (outside this folder).
+2. The dispatcher takes the job (`offer.py`).
+3. It finds who's free in the area right now (`availability.py`).
+4. It scores each free responder on closeness (60%), recent yeses (25%) and
+   skills (15%) (`routing.py`, `history.py`, `config.py`).
+5. It lines them up, best first; nobody is removed (`routing.py`).
+6. It buzzes the first responder's phone and waits up to 60 seconds
+   (`offer.py`, timer in `config.py`).
+7. Yes: score goes up, done. No or time runs out: the job quietly vanishes
+   from their phone, their score goes down by the same amount either way,
+   and it moves to the next person (`offer.py`, `history.py`).
+8. If nobody says yes, it gives up and the job goes unfilled (`offer.py`).
+
+### What we saw, and the rule that explains it
+
+| What we saw in the data | The rule in the code that explains it | File |
+|---|---|---|
+| Everyone missed more in the update week (78 → 54 of 100) | Waiting time cut from 90 to 60 seconds | `config.py`, `offer.py` |
+| Running out of time hurt as much as saying no | The same "they said no" step runs for both | `offer.py`, `history.py` |
+| 4 responders got stuck and never came back | A miss costs 0.12, a yes earns 0.08 (must take >6 in 10 to stay even); scores never drift back up (Wen's 2019 note) | `history.py`, `config.py` |
+| Back of the line meant almost no jobs | One responder asked at a time, best first; "the order" becomes "whether" | `offer.py`, `routing.py` |
+| The 4 only dropped the week *after* the update | Scores change one job at a time, so it took a week of misses to fall | `history.py` |
+| Before the update, score didn't seem to matter | Scores cap at 1.0; everyone was above 6 in 10, so all tied at the top | `history.py`, `config.py` |
+| The stuck four's rare jobs were leftovers | You're only reached after everyone ahead says no | `offer.py` |
+| The busiest got busier (The Gale 13 → 21) | Closeness now counts most, so the nearest high-scorer wins the work | `routing.py`, `config.py` |
+| Ashgrove and Halfmoon lost jobs with good scores | Closeness counts more; skills count least, so a closer untagged responder can win | `config.py`, `routing.py` |
+| "Is my account broken?" (40% of tickets) | Timed-out jobs are quietly removed; no "you missed one" message, no history | `offer.py` |
+| Acceptance rate "recovering" | Stuck responders barely get asked, so their misses stop counting | `offer.py`, `routing.py` |
+| Fewer jobs filled | If nobody says yes, the code just gives up: no retry, no alarm | `offer.py` |
+
+### What the code can't explain
+
+- **Why those four kept missing.** "Buzz the phone" (`push_to_device`) is a
+  placeholder here; the real sending code lives elsewhere, so this folder
+  can't show whether their phones got jobs late or not at all.
+- **Why Nightwell said "nothing" while the CSV shows 14 accepts.** Nothing
+  here produces that spreadsheet.
+
+### One new question the code raises
+
+In `history.py`, scores live in a simple in-memory list (`_scores = {}`),
+and anyone not on it starts at **0.5**. If the real system works this way,
+**installing an update could reset everyone's score to the middle.** Before
+4.2 everyone sat at 1.0 with room to spare; after a reset, the same bad week
+would drop a responder much further (Vesper to about 0.26 instead of 0.76).
+This is a question, not a finding, since the folder may be simplified. Ask
+Wen: **"When 4.2 was installed, did everyone's score reset to 0.5?"**
+
+## Hypotheses to test
+
+Written in scientific-method form after reviewing the routing code, and
+ranked by how likely testing each one is to identify the root cause.
+
+| Hypothesis | If / Then / Because | Confirms if | Fails if | Likelihood of resolving |
+|---|---|---|---|---|
+| **#1 The points trap** ⭐ | **If** a responder keeps accepting fewer than 6 of 10 offers, **then** their score falls to near 0 and they stop getting offers, **because** "ran out of time" counts as "no," a miss costs more than a yes earns, and scores never recover. | The four's real scores fell to near 0 in mid-August and stayed there, and low scores line up with few offers the next week | The four's real scores stayed near the top, **or** low-score responders kept getting normal offers | 🟢 **High**: code, data and all four analysts agree, and one look at real scores settles it |
+| **#2 The timer is too short** ⭐ | **If** the time to answer is cut from 90 to 60 seconds, **then** responders who normally answer in 60–90 seconds miss offers they used to take, **because** the offer is pulled back at 60 seconds. | Many taps land 60–90 seconds after the offer, especially for the four | Almost no taps land between 60 and 90 seconds | 🟢 **High-medium**: the only change that hit all 16 at once, but late taps may only be in phone-side logs |
+| **#3 Phones aren't getting jobs in time** | **If** 4.2 made some offers reach phones late or not at all, **then** those responders miss offers however fast they are, **because** most of the 60 seconds is gone before the phone buzzes. | Delivery times are long or missing for the four since 12 Aug | Delivery is fast and unchanged for the four | 🟡 **Medium**: clean test, but the update week hurt everyone, which fits the timer better |
+| **#4 Installing 4.2 reset scores** | **If** installing 4.2 wiped the in-memory score list, **then** everyone restarted at 0.5 on 12 Aug, **because** scores weren't saved permanently. | Scores jump from about 1.0 to 0.5 on 12 Aug | Scores are saved and show no jump | 🟡 **Medium**: one question to Wen, but no data supports it yet |
+| **#5 The spreadsheet isn't counting what we think** | **If** the CSV counts something other than offers that reached each responder (or has names on the wrong rows), **then** it won't match the offer log, **because** it's built from a different source than what responders see. | CSV and offer log disagree for Nightwell, Ironvale, Stormwrack | They match, so the tickets were wrong | 🟡 **Medium**: decides how far to trust our numbers, not the cause itself |
+| **#6 Jobs are going unfilled** | **If** more offers run through the whole line without a yes, **then** more emergencies end unfilled, **because** the dispatcher gives up with no retry or alarm. | Unfilled jobs rose after 12 Aug | Unfilled jobs stayed flat | 🟡 **Medium**: explains the after-effects, not the trigger |
+| **#7 Closeness explains the smaller losses** | **If** closer responders now win more often, **then** farther ones lose some offers despite good scores, **because** 4.2 raised closeness from 45% to 60% of the ranking. | Ashgrove and Halfmoon stay low in September with healthy scores | Their offers climb back as scores recover | 🟡 **Medium-low**: explains the smaller losses, not the four who collapsed |
+| **#8 A quiet August** | **If** August always has fewer emergencies, **then** part of the later drop is seasonal, **because** fewer emergencies means fewer jobs. | Last August shows a similar dip in emergencies | Emergencies were flat, and last August shows no dip | 🔴 **Low**: can't explain the update-week drop, at most a small slice after |
+| **#9 Skill jobs going to the wrong responders** | **If** skills only count 15%, **then** closer responders without the skill sometimes win skill jobs, **because** lacking the skill doesn't remove you from the line. | More skill jobs went to untagged responders after 12 Aug | The share didn't change | 🔴 **Low-medium**: a real risk, but a side effect |
+| **#10 The four chose not to** | **If** the four lost interest, **then** their misses are mostly "no" taps, **because** they're choosing to turn jobs down. | Most of their misses are "no" taps | Most of their misses are timeouts | 🔴 **Low**: they were among the most reliable responders before |
+
+**Data that settles most of the table:**
+
+- Real scores over time (Wen): #1, #4.
+- The offer log (sent → reached phone → seen → yes / no / ran out / late
+  tap, with seconds) (Wen): #2, #3, #5, #10. Late taps may only exist in
+  phone-side logs, because `offer.py` stops listening at 60 seconds.
+- Job outcomes and emergencies per week (Ravi): #6, #8.
+
+### Why #1 and #2 lead: supporting data
+
+**#1, the points trap**
+
+| Evidence | The numbers | Source |
+|---|---|---|
+| The four who lost the most points in the update week are exactly the four who got stuck | Undertow −0.52, Farlight −0.40, Mite −0.40, Vesper −0.24. Next is Bulwark at −0.20, who was fine | CSV, scored with the code's rules |
+| They never came back | Offers 49 a week → 16 → 6 → 3. Accepted after the update: 3 of 25 (12%), down from 75% | CSV |
+| Everyone else bounced back | All other 12 scores return to the top within a week or two; Bulwark took 8 of 10 the next week | CSV, scored with the code's rules |
+| The trap is written in the code | Timeout counts as "no" (`offer.py:30`). Miss −0.12 vs yes +0.08, so 6 of 10 just to stay even (`config.py`). No recovery (`history.py:30`) | Code |
+| Remove the trap and nobody gets stuck | Not counting timeouts as "no" saved all four in every simulation | Analyst 1 |
+| It wasn't about being a weak responder | The four accepted 69–87% before the update; Vesper was one of the best | CSV |
+
+**#2, the timer**
+
+| Evidence | The numbers | Source |
+|---|---|---|
+| Everyone had a bad update week | Acceptance 77.9% → 54.2%; all 16 had their worst week of the summer | CSV |
+| Misses doubled while work stayed the same | Missed 40 a week → 81; sent 172 → 177 | CSV |
+| Complaints started the morning after | T-001 (13 Aug); 9 tickets describe an offer vanishing before they could answer | Tickets |
+| Handlers describe responders just too late, unprompted | *"coat on, one boot on"* (Ambrose); *"by the time he's actually got a thumb on the screen — it's gone"* (Dot); *"before he'd even got his boots on"* (Halloran) | Interviews (3 of 4) |
+| Responders describe it too | *"literally had my thumb on the screen and it switched to someone else"* (T-015) | Tickets |
+| The cost didn't go away | The other 12 are still about 5 points below their pre-update rate | CSV |
+| The only change that matches the timing | Timer cut from 90 to 60 seconds on 12 Aug (`config.py:9`) | Code, release notes |
+
+**Together:** #2 started the fire (a week of misses for everyone) and #1
+kept it burning for anyone who kept missing. That's why fixing only the
+timer won't bring the four back.
