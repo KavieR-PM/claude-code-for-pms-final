@@ -94,3 +94,12 @@ a quick reflection point before we continue on - if i'd only asked for the numbe
 
 ### 27.
 wrap up
+
+### 28.
+update the problem table with the root-cause debate
+
+### 29.
+wrap up
+
+### 30.
+eyes

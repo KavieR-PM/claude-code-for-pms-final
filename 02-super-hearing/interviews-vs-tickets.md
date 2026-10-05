@@ -93,34 +93,41 @@ didn't match the chart ❌.
 
 ## Problem areas at a glance
 
-Updated 30 Sep 2026 with the ticket breakdown, the before/after comparison,
-the disagreement analysis and a closer read of the callout data (see "Data
-source: callout history" at the end). Last column, compared with the first
-version of this table: 🆕 new row · ⬆️ severity raised · ✏️ numbers or
-wording updated · — unchanged.
+Updated 5 Oct 2026 with the four-analyst root-cause debate (see "Root
+cause: what four analysts agreed on after debating"). Last column shows
+what changed in this update: 🆕 new row · ⬆️ severity or confidence raised
+· ⬇️ lowered · ✏️ updated · — unchanged.
 
 | # | Problem area | How big | Evidence (data · tickets · interviews) | Confidence | Severity | Next step (who) | Change |
 |---|---|---|---|---|---|---|---|
-| 1 | **Responders cut off by the scoring spiral** | 4 of 16 (25%) went from 49 offers a week combined to 3. Good responders before (69–87% acceptance). **None recovered:** 3 of 25 offers accepted since, 0 of 9 in the last two weeks | ✅ 40 rows · 2 of 4 found · 2 of 4 found (Dot's only after a prompt) | High that it happened. Medium on cause | 🔴 High: permanent without a fix | Actual scores for everyone near the bottom (Wen). A score reset or recovery mechanism, since a timeout change alone won't bring them back | ✏️ |
-| 2 | **Offer timeout too short** (60s) | Acceptance 77% → 54% in release week. The other 12 are still about 5 points down (75–79% → 69–74%) | ✅ · 9 tickets (4 vanished + 5 rare-then-lost) · 3 of 4, all unprompted | High | 🔴 High | Declines vs timeouts, and answers in 60–90s (Ravi/Wen) | ✏️ |
-| 3 | **Nobody can see their own offers** ("is my account broken?") | About 10 tickets (40%). Missed offers are silently removed from the phone, and there's no history screen | Code · ✅ 40% · 1 second-hand | High that the gap exists | 🔴 High: spreads fear beyond the four. **Quick win** | "Your recent offers" view (Sofia/Wen) | 🆕 |
-| 4 | **Affected responders who don't complain** | 2 of the 4 cut off filed 0 tickets | ✅ · ❌ missed · by chance | High | 🔴 High | Same score pull as #1 | — |
-| 5 | **Notifications may not be firing** (4.2's re-offer push fix) | Unknown. Could explain "phone never goes off" | Release notes · consistent · — | Low: hypothesis | 🟠 Unknown | Check whether the push fix suppressed notifications (Wen) | 🆕 |
-| 6 | **Work concentrated on fewer people** | The other 12 now get 98% of all offers (was 72%). Top-4 share 32% → 48%. Halfmoon nearly fell too | ✅ · 0 · 1 of 4 (Kip) | Medium | 🟠 Medium: support will never see it | Track weekly. Add Halfmoon to the offer-log request (Ravi/Wen) | ⬆️ |
-| 7 | **Fewer callouts filled** | Accepted pings 132/wk → 96, 104, 108, 120 (still −9%). About 100 fewer over four weeks. Pings sent also down 4–8% | ✅ · — · — | Low on cause: fewer incidents (seasonal) **or** callouts not filled through Dispatch | 🟠 Unknown: could be a hidden coverage problem | Weekly incidents, unfilled callouts and coverage gaps, including Aug 2025 (Ravi). Routing overrides since 12 Aug (Wen, audit log) | ✏️ |
-| 8 | **The headline metric hides the problem** | Acceptance rate "recovers" to 73% partly because the four stopped being offered work, while callouts filled stay down | ✅ · — · — | High | 🟠 Medium: leadership sees recovery that isn't there | Report callouts filled and coverage gaps alongside acceptance (Ravi) | 🆕 |
-| 9 | **Tickets don't match the data** | 14 of 25 tickets contradicted, 7 backed, 4 partial. 3 people wrote 36% | ✅ conflict · ✅ conflict · — | High that it exists. Partly explained (#3, #5), not for Nightwell | 🟠 Medium | Offer log (sent → delivered → seen → accepted/timed out) for Vesper, Nightwell, Bulwark, Halfmoon (Wen/Ravi) | ✏️ |
-| 10 | **Alerts easy to miss or hard to tell apart** | — | — · 0 · 3 of 4 | Medium | 🟠 Medium: makes #2 and #3 worse, but won't fix #1 | Redesign input (Sofia) | ⬆️ |
-| 11 | **Console hard to read** | — | — · 0 · 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) | — |
-| 12 | **Saved filters silently reset** | — | — · 0 · 1 of 4 | Low | 🟢 Low | Ask whether console tickets exist (Nadia) | — |
-| 13 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — · 0 · 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM | — |
+| 1 | **Responders cut off by the scoring rules** | 4 of 16 (25%) went from 49 offers a week combined to 3. None recovered. One bad week alone isn't enough (Bulwark recovered); staying below ~60% acceptance afterwards is | ✅ 40 rows · 2 of 4 found · 2 of 4 found | **High** that the scoring rules are the lock-in (all four analysts) | 🔴 High: permanent without a fix | **Fix now:** stop scoring timeouts as declines (protected the four in every simulation), add decay, reset the four (Wen) | ⬆️ ✏️ |
+| 2 | **Offer timeout too short** (60s) | Acceptance 77% → 54% in release week. The other 12 still about 5 points down | ✅ · 9 tickets · 3 of 4, all unprompted | **Medium** that it's the trigger (was High) | 🔴 High | Restoring 90s only helps if misses were taps at 60–90s. Wait for seconds-to-answer in the offer log (Wen) | ⬇️ ✏️ |
+| 3 | **Nobody can see their own offers** ("is my account broken?") | About 10 tickets (40%). Missed offers silently removed; no history screen | Code · ✅ 40% · 1 second-hand | High that the gap exists | 🔴 High. **Quick win** | "Your recent offers" view (Sofia/Wen) | — |
+| 4 | **Affected responders who don't complain** | 2 of the 4 cut off filed 0 tickets | ✅ · ❌ missed · by chance | High | 🔴 High | Score pull for everyone near the bottom (Wen) | — |
+| 5 | **Why the four kept missing** (replaces "notifications may not be firing") | About 3 of 25–32 offers accepted after release. Not chance (~1 in 10,000), not just leftover callouts | ✅ · T-019, T-025 · Dot, Kip | **Low**: three suspects remain: timer too short for them, phones not getting offers (incl. 4.2's re-offer push fix), or choosing not to | 🔴 High: **decides which fix works** | **Offer log** for the four + Bulwark, Halfmoon, Ashgrove, Nightwell: no tap = phones; taps at 60–90s = timer; declines = choice (Wen) | 🆕 ⬆️ |
+| 6 | **Work concentrated on fewer people** | The other 12 now get 98% of offers (was 72%). Top-4 share 32% → 48% | ✅ · 0 · 1 of 4 (Kip) | **Medium-high**: the reweight decides who absorbs the work | 🟠 Medium: support will never see it | Track weekly, including the top 4's acceptance (Ravi) | ✏️ |
+| 7 | **Fewer callouts filled** | Accepted pings still −9%. About 100 fewer over four weeks | ✅ · — · — | **Low-medium**: August explains 0% of the release-week drop and at most ~30% of the later shortfall; the rest is likely callouts going unfilled (short local offer lists) | 🟠 Unknown: could be a hidden coverage problem | Incidents, unfilled and cancelled callouts per week, including Aug 2025 (Ravi). Routing overrides since 12 Aug (Wen) | ✏️ |
+| 8 | **The headline metric hides the problem** | Acceptance "recovers" to 73% partly because the four stopped being offered work | ✅ · — · — | High | 🟠 Medium | Report callouts filled and coverage gaps alongside acceptance (Ravi) | — |
+| 9 | **Tickets don't match the data** | 14 of 25 tickets contradicted. Gainers report "nothing" while the CSV shows record highs | ✅ conflict · ✅ conflict · — | High that it exists. Analysts split: names on the wrong rows / offers that never reached a phone (Analyst 4) vs a different counting unit (Analyst 3) | 🟠 Medium: **every finding depends on it** | What the CSV counts (Ravi). The offer log settles it (Wen) | ✏️ |
+| 10 | **Reweight side effects** | Ashgrove and Halfmoon lost ~25% of offers with healthy scores. Specialists' tags are now worth only ~11 travel-minutes | ✅ · — · — | Medium (Ashgrove/Halfmoon). Low (specialists) | 🟡 Medium: mostly intended, but tagged incidents may go to untagged responders | September offers for Halfmoon/Ashgrove: climb back = score, stay low = proximity (Ravi). Tagged incidents to untagged responders, before vs after (Wen) | 🆕 |
+| 11 | **Alerts easy to miss or hard to tell apart** | — | — · 0 · 3 of 4 | Medium | 🟠 Medium: makes #2 and #3 worse, won't fix #1 | Redesign input (Sofia) | — |
+| 12 | **Console hard to read** | — | — · 0 · 3 of 4 | Medium | 🟢 Low | Redesign backlog (Sofia) | — |
+| 13 | **Saved filters silently reset** | — | — · 0 · 1 of 4 | Low | 🟢 Low | Ask whether console tickets exist (Nadia) | — |
+| 14 | **Supply requisitions stuck in one queue** | 11-day wait on cracked armor | — · 0 · 1 of 4 | Low | 🟢 Low for Dispatch | Pass to the Supply PM | — |
 
-Rows 1–4 are the core: the timeout triggered the drop, the scoring rules
-made it permanent, and nobody (including support) can see who's affected.
-Fixing only the timeout won't bring back the four responders already stuck
-at zero. Row 3 is the quick win to ship alongside the timeout and scoring
-fix. Row 7 settles the seasonality argument, and row 8 is why the usual
-dashboard won't show any of this.
+**How to read it:**
+
+- **Root cause:** 4.2's shorter timer started it, and the scoring rules
+  (row 1) locked out anyone who kept missing. It wasn't August.
+- **Fix now, whatever row 5 turns out to be:** rows 1 and 3 (stop scoring
+  timeouts as declines, add decay, reset the four, show responders their
+  recent offers).
+- **Fix next, once the offer log answers row 5:** the timer (row 2) if
+  responders are tapping at 60–90 seconds, or notifications if their phones
+  aren't getting offers.
+- **Fixing only the timer won't bring back the four** already stuck at zero.
+- Row 7 settles how much was August. Row 8 is why the usual dashboard won't
+  show any of this. Row 9 decides how far to trust every number here.
 
 ## Themes by source
 

@@ -173,8 +173,9 @@ called them noise, but check that before dismissing them.
 
 ### Findings (session of 30 Sep 2026)
 - **"The synthesis file"** means `02-super-hearing/interviews-vs-tickets.md`.
-  It holds the prioritization point of view, the 13-row problem-area table
-  (rows 1–4 are the core; row 3 is the quick win), and every split below.
+  It holds the prioritization point of view, the 14-row problem-area table
+  (updated 5 Oct with the debate; rows 1 and 3 are fix-now, row 5 decides
+  the timer-vs-phone fix), and every split below.
 - **Tickets, broken down:** 16 quiet only, 5 rare offer then lost (the most
   severe), 4 vanished only. 14 of 25 are contradicted by the CSV, 7 backed,
   4 partial. Three people wrote 36%. About 40% ask "is my account broken?"
@@ -210,7 +211,7 @@ called them noise, but check that before dismissing them.
   after release): timer too short for them, phones not getting offers, or
   choosing not to. Not chance, not just "leftover" callouts. Confidence:
   high that scoring must be fixed, medium on the timer, low on "why these
-  four". The problem table has NOT been updated with this yet.
+  four". The problem table was updated with this on 5 Oct.
 - **Fix now regardless:** stop scoring timeouts as declines, add decay,
   reset the four. Timer vs phone fix waits for the offer log.
 - **The one number for Helen:** 4 of 16 responders went from ~12 offers a
@@ -234,8 +235,7 @@ called them noise, but check that before dismissing them.
   overloaded, that the four were strong before, the comparisons that ruled
   out August, and the Nightwell data conflict. When I ask for a number,
   show the rows (or a per-responder view) behind it too.
-- State at end of Module 3: everything committed; the problem table still
-  needs updating with the root-cause debate.
+- Problem table updated with the root-cause debate on 5 Oct.
 
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and
