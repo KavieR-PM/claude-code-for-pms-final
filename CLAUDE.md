@@ -227,6 +227,16 @@ called them noise, but check that before dismissing them.
   not) for the four plus Bulwark, Halfmoon, Ashgrove and Nightwell. Ask Ravi
   for September (Halfmoon test: climbs back = score, stays low = proximity).
 
+### Reflection (session of 5 Oct 2026)
+- **Numbers vs rows:** the headline number alone (acceptance 77% → 54% →
+  73%) reads as "a bad week that fixed itself". The rows showed it was 4
+  responders, that the recovery was partly fake, that others were
+  overloaded, that the four were strong before, the comparisons that ruled
+  out August, and the Nightwell data conflict. When I ask for a number,
+  show the rows (or a per-responder view) behind it too.
+- State at end of Module 3: everything committed; the problem table still
+  needs updating with the root-cause debate.
+
 - Other material in this repo: `00-rook/data/` (callout history),
   `00-rook/code/dispatch-routing/` (routing source), and
   `00-rook/feedback/` (tickets and interviews).

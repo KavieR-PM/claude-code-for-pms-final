@@ -88,3 +88,9 @@ I want you to administer 4 agents, one to explore each area here. I want these a
 
 ### 25.
 add it to the synthesis file but don't update the problem table yet
+
+### 26.
+a quick reflection point before we continue on - if i'd only asked for the number and not the rows, what would I have missed?
+
+### 27.
+wrap up
