@@ -1,0 +1,545 @@
+<title>Rook Signal Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* One deliberate visual world: a comic-book hero HQ at night. */
+  :root {
+    color-scheme: light;
+    --night: #0d1b4c;
+    --sky: #1f4fd8;
+    --red: #e3262f;
+    --yellow: #ffcc1f;
+    --green: #13a862;
+    --ink: #0b0f1f;
+    --paper: #ffffff;
+    --paper-2: #eef3ff;
+    --muted: #4d5778;
+    --grey: #9aa1b5;
+    --hard: 5px 5px 0 var(--ink);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background-color: var(--night);
+    background-image: radial-gradient(rgba(255,255,255,.07) 1.3px, transparent 1.5px);
+    background-size: 10px 10px;
+    color: var(--paper);
+    font: 17px/1.45 "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+    padding-inline: 16px;
+    padding-block: 24px 64px;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 22px; }
+  .bang { font-family: "Bangers", "Impact", "Arial Black", sans-serif; letter-spacing: .04em; font-weight: 400; }
+  button { font: inherit; cursor: pointer; }
+  :focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
+  p { margin: 0; }
+
+  .masthead { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo svg { width: 64px; height: 64px; flex: none; }
+  .logo h1 { margin: 0; font-size: clamp(34px, 6vw, 54px); line-height: .95; color: var(--yellow); text-shadow: 3px 3px 0 var(--red), 6px 6px 0 var(--ink); }
+  .logo p { color: #c9d4ff; font-size: 15px; max-width: 46ch; }
+  .tabs { display: inline-flex; border: 3px solid var(--ink); box-shadow: var(--hard); background: var(--paper); border-radius: 14px; overflow: hidden; }
+  .tabs button { border: 0; padding: 10px 18px; background: var(--paper); color: var(--ink); font-family: "Bangers", Impact, sans-serif; font-size: 22px; letter-spacing: .05em; }
+  .tabs button + button { border-left: 3px solid var(--ink); }
+  .tabs button[aria-pressed="true"] { background: var(--red); color: var(--yellow); }
+
+  .stage { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+  .caption { font-family: "Bangers", Impact, sans-serif; font-size: 22px; letter-spacing: .05em; color: var(--yellow); margin: 0 0 10px; }
+
+  .phone { background: var(--ink); border-radius: 40px; padding: 12px; box-shadow: 8px 8px 0 var(--red); max-width: 400px; margin: 0 auto; width: 100%; }
+  .screen { border-radius: 30px; overflow: hidden; min-height: 680px; background-color: var(--sky); background-image: radial-gradient(rgba(255,255,255,.14) 1.3px, transparent 1.5px); background-size: 9px 9px; color: var(--ink); position: relative; }
+  .screen.today { background-color: #c9ccd6; background-image: none; }
+  .statusbar { display: flex; justify-content: space-between; padding: 12px 20px 4px; font-weight: 700; font-size: 13px; color: var(--paper); }
+  .screen.today .statusbar { color: var(--ink); }
+  .sbody { padding: 8px 14px 22px; display: grid; gap: 14px; }
+  .who { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--paper); }
+  .who h2 { margin: 0; font-size: 34px; line-height: 1; text-shadow: 2px 2px 0 var(--ink); }
+  .screen.today .who { color: var(--ink); }
+  .screen.today .who h2 { text-shadow: none; }
+  .badge { font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); white-space: nowrap; }
+  .badge.go { background: var(--green); color: var(--paper); }
+
+  .panel { background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--hard); padding: 14px; display: grid; gap: 8px; position: relative; }
+  .panel h3 { margin: 0; font-family: "Bangers", Impact, sans-serif; font-weight: 400; letter-spacing: .04em; font-size: 24px; line-height: 1.05; }
+  .panel p { font-size: 15px; color: var(--muted); }
+  .panel.y { background: var(--yellow); }
+  .panel.g { background: var(--green); color: var(--paper); }
+  .panel.g p { color: #eafff4; }
+  .linky { background: none; border: 0; padding: 0; text-decoration: underline; font-weight: 700; color: inherit; justify-self: start; font-size: 15px; }
+  .burst { position: absolute; top: -26px; right: -12px; width: 76px; height: 76px; }
+  .has-burst { padding-right: 58px; }
+  .burst text { font-family: "Bangers", Impact, sans-serif; }
+
+  .ready { background: var(--yellow); border: 3px solid var(--ink); box-shadow: var(--hard); border-radius: 18px; padding: 14px 16px; text-align: left; color: var(--ink); display: grid; gap: 2px; width: 100%; }
+  .ready strong { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 26px; letter-spacing: .04em; line-height: 1; }
+  .ready span { font-size: 14px; color: #3b3420; }
+  .ready:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--ink); }
+  .ready[disabled] { background: #ece7d4; cursor: not-allowed; }
+
+  .signal { background: var(--red); color: var(--paper); border: 3px solid var(--ink); border-radius: 20px; box-shadow: var(--hard); padding: 14px; display: grid; gap: 10px; position: relative; overflow: hidden; }
+  .signal::before { content: ""; position: absolute; inset: 0; background: repeating-conic-gradient(from 0deg at 85% 0%, rgba(255,255,255,.07) 0 8deg, transparent 8deg 16deg); pointer-events: none; }
+  .signal > * { position: relative; }
+  .signal.grace { background: var(--yellow); color: var(--ink); }
+  .signal.shake { animation: shake .5s linear 2; }
+  @keyframes shake { 0%,100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(-5px) rotate(-1deg); } 75% { transform: translateX(5px) rotate(1deg); } }
+  .sig-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .sig-top .bang { font-size: 30px; color: var(--yellow); text-shadow: 2px 2px 0 var(--ink); }
+  .signal.grace .sig-top .bang { color: var(--red); text-shadow: 2px 2px 0 var(--paper); }
+  .urgent { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); border-radius: 6px; padding: 2px 8px; font-family: "Bangers", Impact, sans-serif; font-size: 18px; letter-spacing: .05em; transform: rotate(-4deg); }
+  .what { font-family: "Bangers", Impact, sans-serif; font-size: 34px; line-height: 1; letter-spacing: .03em; text-shadow: 2px 2px 0 var(--ink); }
+  .signal.grace .what { text-shadow: none; }
+  .dist { display: grid; grid-template-columns: 1fr 104px; gap: 10px; align-items: center; }
+  .drive { font-family: "Bangers", Impact, sans-serif; font-size: 58px; line-height: .9; letter-spacing: .02em; color: var(--yellow); text-shadow: 3px 3px 0 var(--ink); }
+  .signal.grace .drive { color: var(--ink); text-shadow: none; }
+  .drive small { font-size: 22px; }
+  .where { font-size: 15px; font-weight: 700; }
+  .times { font-size: 15px; background: rgba(11,15,31,.25); border-radius: 8px; padding: 6px 8px; font-weight: 700; }
+  .signal.grace .times { background: rgba(11,15,31,.1); }
+  .map { width: 104px; height: 84px; background: var(--paper); border: 2px solid var(--ink); border-radius: 10px; display: block; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-weight: 700; font-size: 13px; }
+  .signal.grace .tag { background: var(--paper); }
+  .take-row { display: grid; grid-template-columns: 132px 1fr; gap: 14px; align-items: center; }
+  .ring { width: 132px; height: 132px; border-radius: 50%; padding: 8px; background: conic-gradient(var(--yellow) calc(var(--p) * 1%), rgba(11,15,31,.35) 0); border: 3px solid var(--ink); }
+  .signal.grace .ring { background: conic-gradient(var(--red) calc(var(--p) * 1%), rgba(11,15,31,.2) 0); }
+  .take { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--ink); background: var(--paper); color: var(--ink); display: grid; place-items: center; text-align: center; box-shadow: inset 0 -6px 0 rgba(11,15,31,.12); }
+  .take b { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 28px; letter-spacing: .05em; line-height: 1; display: block; }
+  .take span { font-size: 15px; font-weight: 700; display: block; }
+  .take-side { display: grid; gap: 8px; font-size: 14px; }
+  .pass { background: transparent; border: 2px solid currentColor; color: inherit; border-radius: 10px; padding: 8px 10px; font-weight: 700; }
+  .sfx { position: absolute; z-index: 3; right: 10px; top: -6px; font-family: "Bangers", Impact, sans-serif; font-size: 34px; color: var(--yellow); -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); transform: rotate(8deg); pointer-events: none; }
+
+  .win { background: var(--green); color: var(--paper); border: 3px solid var(--ink); border-radius: 20px; box-shadow: var(--hard); padding: 16px; display: grid; gap: 6px; position: relative; }
+  .win .bang { font-size: 44px; line-height: 1; text-shadow: 3px 3px 0 var(--ink); color: var(--yellow); }
+
+  .missed { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: var(--hard); overflow: hidden; }
+  .missed-head { background: var(--ink); color: var(--yellow); padding: 8px 14px; font-family: "Bangers", Impact, sans-serif; font-size: 26px; letter-spacing: .05em; display: flex; justify-content: space-between; align-items: center; }
+  .missed-head span { font-family: "Atkinson Hyperlegible", sans-serif; font-size: 13px; color: #c9d4ff; letter-spacing: 0; }
+  .missed-body { padding: 12px 14px; display: grid; gap: 10px; }
+  .missed-ctx { font-weight: 700; }
+  .ok-line { background: var(--paper-2); border-radius: 8px; padding: 6px 10px; font-size: 14px; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 2px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 14px; }
+  .chip[aria-pressed="true"] { background: var(--sky); color: var(--paper); }
+  .follow { font-size: 14px; color: var(--muted); display: grid; gap: 8px; }
+  .row-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { border: 3px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 12px; padding: 8px 14px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink); }
+  .btn.hot { background: var(--yellow); }
+  .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+  .btn[disabled] { opacity: .6; cursor: not-allowed; }
+
+  .meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; align-items: end; height: 64px; }
+  .meter i { display: block; background: var(--sky); border: 2px solid var(--ink); border-bottom: 0; border-radius: 4px 4px 0 0; }
+  .meter i.down { background: var(--red); }
+  .meter i.up { background: var(--yellow); }
+  .meter-axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 700; }
+  .log { display: grid; border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--paper); }
+  .log-item { border-top: 2px solid var(--paper-2); }
+  .log-item:first-child { border-top: 0; }
+  .log-head { width: 100%; background: transparent; border: 0; text-align: left; display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; color: var(--ink); }
+  .ico { width: 36px; height: 36px; border-radius: 10px; border: 2px solid var(--ink); display: grid; place-items: center; font-weight: 700; font-size: 18px; }
+  .ico.yes { background: var(--green); color: var(--paper); }
+  .ico.miss { background: var(--yellow); }
+  .ico.phone { background: var(--red); color: var(--paper); }
+  .ico.no { background: var(--paper-2); }
+  .log-what { font-weight: 700; font-size: 15px; display: block; }
+  .log-ctx { font-size: 13px; color: var(--muted); display: block; }
+  .log-detail { padding: 0 12px 12px 58px; font-size: 14px; color: var(--muted); display: grid; gap: 8px; }
+  .said { color: var(--sky); font-weight: 700; }
+  .log-title { font-family: "Bangers", Impact, sans-serif; font-size: 22px; letter-spacing: .05em; color: var(--paper); text-shadow: 2px 2px 0 var(--ink); margin: 0 0 6px; }
+
+  .today-empty { text-align: center; padding: 70px 14px; color: #4a4f60; display: grid; gap: 8px; }
+  .today-empty b { font-size: 20px; color: var(--ink); }
+  .dull-offer { background: #f2f3f6; border: 1px solid #8b90a3; border-radius: 12px; padding: 12px; display: grid; gap: 8px; color: var(--ink); }
+  .dull-offer .row-btns button { border: 1px solid #8b90a3; background: var(--paper); border-radius: 8px; padding: 8px 12px; }
+  .sim { justify-self: center; }
+
+  .hq { background: var(--paper-2); color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 8px 8px 0 var(--yellow); overflow: hidden; }
+  .hq.night { --paper: #1a2350; --paper-2: #10183d; --muted: #b9c3ec; color: #f1f4ff; }
+  .hq.night .card, .hq.night .reason-box, .hq.night .btn:not(.hot), .hq.night .settings select { color: #f1f4ff; }
+  .hq-head { background: var(--ink); color: var(--yellow); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; }
+  .hq-head .bang { font-size: 30px; }
+  .hq-head small { display: block; color: #c9d4ff; font-size: 13px; font-family: "Atkinson Hyperlegible", sans-serif; }
+  .switch-row { display: flex; align-items: center; gap: 8px; color: #e8edff; font-size: 14px; font-weight: 700; }
+  .sw { width: 52px; height: 30px; border-radius: 15px; border: 3px solid var(--yellow); background: transparent; position: relative; padding: 0; }
+  .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--yellow); transition: left .15s; }
+  .sw[aria-checked="true"] { background: var(--yellow); }
+  .sw[aria-checked="true"]::after { left: 25px; background: var(--ink); }
+  .hq-banner { margin: 14px 16px 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; padding: 18px 16px 20px; }
+  .card { background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--hard); overflow: hidden; display: grid; align-content: start; position: relative; }
+  .card-band { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: 3px solid var(--ink); }
+  .card-band .bang { font-size: 28px; line-height: 1; color: #ffffff; text-shadow: 2px 2px 0 var(--ink); }
+  .band-quiet { background: var(--sky); }
+  .band-over { background: var(--red); }
+  .band-plain { background: var(--grey); }
+  .card-body { padding: 12px 14px 14px; display: grid; gap: 12px; }
+  .stamp { position: absolute; top: 56px; right: 10px; transform: rotate(8deg); font-family: "Bangers", Impact, sans-serif; font-size: 22px; letter-spacing: .05em; padding: 2px 10px; border: 3px solid var(--ink); border-radius: 8px; box-shadow: 3px 3px 0 var(--ink); }
+  .stamp.quiet { background: var(--yellow); color: var(--ink); }
+  .stamp.over { background: var(--red); color: var(--yellow); }
+  .nums { display: flex; gap: 18px; }
+  .nums div { display: grid; }
+  .nums b { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 40px; line-height: 1; }
+  .nums span { font-size: 12px; color: var(--muted); font-weight: 700; }
+  .reason-box { background: var(--paper-2); border: 2px dashed var(--ink); border-radius: 10px; padding: 8px 10px; font-size: 14px; display: grid; gap: 4px; }
+  .hq.night .reason-box { border-color: #8d9be0; }
+  .settings { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; font-weight: 700; border-top: 2px solid var(--paper-2); padding-top: 10px; }
+  .settings select { font: inherit; font-size: 14px; border: 2px solid var(--ink); border-radius: 8px; padding: 3px 6px; background: var(--paper); color: var(--ink); }
+  .mini-sw { width: 44px; height: 26px; border-radius: 13px; border: 2px solid var(--ink); background: var(--paper-2); position: relative; padding: 0; }
+  .mini-sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); transition: left .15s; }
+  .hq.night .mini-sw::after { background: #f1f4ff; }
+  .mini-sw[aria-checked="true"] { background: var(--green); }
+  .mini-sw[aria-checked="true"]::after { left: 20px; background: #ffffff; }
+  .alert-bar { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 12px; box-shadow: var(--hard); padding: 10px 14px; font-weight: 700; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .note { background: #ffffff; color: var(--ink); border: 3px solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--sky); padding: 12px 14px; font-size: 15px; display: grid; gap: 4px; }
+  .note b { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 20px; letter-spacing: .04em; color: var(--red); }
+  .fine { color: #c9d4ff; font-size: 14px; }
+
+  .toast { position: fixed; z-index: 10; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); box-shadow: var(--hard); border-radius: 12px; padding: 10px 16px; font-weight: 700; max-width: calc(100% - 32px); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="logo">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <polygon points="50,2 60,30 92,22 70,46 98,62 66,66 74,98 50,76 26,98 34,66 2,62 30,46 8,22 40,30" fill="#ffcc1f" stroke="#0b0f1f" stroke-width="4"/>
+        <text x="50" y="62" text-anchor="middle" font-family="Bangers, Impact, sans-serif" font-size="30" fill="#e3262f" stroke="#0b0f1f" stroke-width="1.2">R</text>
+      </svg>
+      <div>
+        <h1 class="bang">Rook Signal</h1>
+        <p>Every signal answered, every hero in the fight. Click through what Vesper sees on his phone and what Kip sees at Handler HQ.</p>
+      </div>
+    </div>
+    <div class="tabs" role="group" aria-label="Which version">
+      <button id="t-today" aria-pressed="false">Today (4.2)</button>
+      <button id="t-new" aria-pressed="true">Proposed</button>
+    </div>
+  </header>
+
+  <div class="stage">
+    <section aria-label="Responder phone">
+      <p class="caption">Vesper's phone</p>
+      <div class="phone"><div class="screen" id="screen"></div></div>
+    </section>
+    <section aria-label="Handler console">
+      <p class="caption">Kip's Handler HQ</p>
+      <div class="hq" id="hq">
+        <div class="hq-head">
+          <div><span class="bang">Handler HQ</span><small>Meteor Mite &amp; The Gale · week of 31 Aug · same city</small></div>
+          <div class="switch-row" id="night-row">Night mode <button class="sw" id="night" role="switch" aria-checked="false" aria-label="Night mode"></button></div>
+        </div>
+        <div id="hq-banner"></div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="notes" aria-label="What changed">
+    <div class="note"><b>The signal</b>Every offer is a full-screen signal: urgency, what happened, drive time in giant type, leave-by and arrive-by times, a map, the skills it needs, and a huge round Take It button you can hit with gloves on.</div>
+    <div class="note"><b>Still lit!</b>When 60 seconds run out, the signal turns yellow for 15 more seconds. First tap wins, and both heroes know instantly.</div>
+    <div class="note"><b>Signal missed</b>Every miss comes back with context and a one-tap reason. Your answer never changes your offers. "Too far" lets you set a range; "phone didn't alert" runs a test with a next step.</div>
+    <div class="note"><b>Put me first</b>Always on the home screen, not just after a miss. Once every 4 hours, and it rests until tomorrow if you're first in line and miss again.</div>
+  </section>
+  <p class="fine">Weekly numbers are from the callout history (29 Jun – 31 Aug). Individual offers, times and reasons are illustrative until Wen's offer log is in. Clock starts at 21:14.</p>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const pad = (n) => String(n).padStart(2, "0");
+  const toast = (msg) => { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => { t.hidden = true; }, 3200); };
+
+  const CALL = { type: "Building collapse", urgency: "Urgent", drive: 9, km: "4.1 km", area: "Harbor district", tags: ["Structural entry", "2 trapped"], leave: "21:24", arrive: "21:33" };
+  const CALL_LINE = `${CALL.type} · ${CALL.drive} min drive (${CALL.km}) · ${CALL.area}`;
+  const REASONS = ["I was away from my phone", "My phone didn't alert me", "I saw it too late", "I was already on a callout", "Too far away"];
+  const MISSES = ["late", "timeout", "raced", "delivery"];
+  const VESPER = [14, 13, 15, 14, 13, 14, 12, 5, 2, 1];
+  const MITE = [11, 12, 10, 11, 12, 11, 10, 4, 2, 1];
+  const GALE = [13, 12, 13, 14, 13, 13, 15, 17, 20, 21];
+
+  const state = {
+    mode: "new", back: true, ready: "available", readyUsed: false, radius: null,
+    timer: null, kipTimer: null, night: false,
+    alerts: { mite: true, gale: false }, sounds: { mite: "Knock", gale: "Chime" },
+    miteReady: false, galeEase: false,
+    log: [
+      { id: 1, when: "Mon 31 Aug · 21:14", kind: "delivery", what: "Didn't reach your phone in time", ctx: "Flooded basement · 6 min drive (2.7 km) · Old Quarter", reason: null, detail: "It reached your phone at 0:47 of 0:60." },
+      { id: 2, when: "Thu 27 Aug · 19:02", kind: "late", what: "Tapped 24 s too late", ctx: "Crowd surge · 14 min drive (6.0 km) · Stadium", reason: "I saw it too late", detail: "You tapped at 1:24, after the grace window." },
+      { id: 3, when: "Tue 25 Aug · 07:40", kind: "timeout", what: "Ran out of time", ctx: "Vehicle fire · 11 min drive (5.2 km) · Ring road", reason: null, detail: "No tap within 60 seconds or the grace window." },
+      { id: 4, when: "Fri 21 Aug · 18:22", kind: "taken", what: "Taken", ctx: "Structural entry · 12 min drive (5.5 km) · Docklands", reason: null, detail: "Thanks for answering the signal." },
+      { id: 5, when: "Thu 20 Aug · 23:10", kind: "timeout", what: "Ran out of time", ctx: "Rooftop rescue · 8 min drive (3.4 km) · Harbor district", reason: "I was away from my phone", detail: "No tap within 60 seconds." },
+      { id: 6, when: "Tue 18 Aug · 06:55", kind: "declined", what: "You passed on this one", ctx: "Hazmat spill · 31 min drive (19 km) · North yards", reason: null, detail: "A pass is a real no, so it still counts." }
+    ]
+  };
+
+  const burst = (label, fill, color) => `<svg class="burst" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,0 59,24 84,10 74,36 100,40 78,56 96,78 68,72 64,100 50,78 36,100 32,72 4,78 22,56 0,40 26,36 16,10 41,24" fill="${fill}" stroke="#0b0f1f" stroke-width="3"/><text x="50" y="58" text-anchor="middle" font-size="20" fill="${color}">${label}</text></svg>`;
+  const mapSVG = () => `<svg class="map" viewBox="0 0 104 84" role="img" aria-label="Map from you to the incident"><rect width="104" height="84" fill="#eef3ff"/><path d="M0 60 H104 M0 30 H104 M30 0 V84 M72 0 V84" stroke="#c9d4ff" stroke-width="5"/><path d="M18 66 C 34 66, 34 44, 52 42 S 74 22, 84 16" fill="none" stroke="#e3262f" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/><circle cx="18" cy="66" r="7" fill="#1f4fd8" stroke="#0b0f1f" stroke-width="2"/><polygon points="84,4 91,14 84,26 77,14" fill="#ffcc1f" stroke="#0b0f1f" stroke-width="2"/><text x="10" y="82" font-size="10" font-weight="700" fill="#0b0f1f" font-family="sans-serif">YOU</text></svg>`;
+  const meter = (data) => `<div class="meter" role="img" aria-label="Offers per week, ${data[0]} at the start of summer to ${data[9]} now">${data.map((v, i) => `<i class="${i >= 7 ? (v < data[5] ? "down" : "up") : ""}" style="height:${Math.max(6, Math.round(v / 22 * 64))}px" title="${v} offers"></i>`).join("")}</div><div class="meter-axis"><span>29 Jun</span><span>4.2 · 12 Aug</span><span>31 Aug</span></div>`;
+
+  // ---------- phone ----------
+  function renderPhone() {
+    const scr = $("screen");
+    scr.className = "screen" + (state.mode === "today" ? " today" : "");
+    if (state.mode === "today") {
+      scr.innerHTML = `<div class="statusbar"><span>21:14</span><span>Rook Dispatch</span></div>
+        <div class="sbody"><div class="who"><h2>Vesper</h2><span class="badge">Available</span></div>
+        <div id="slot"></div>
+        <div class="today-empty"><b>No callouts right now</b><span>That's all Vesper sees. No history, no reason, no way to tell "not asked" from "missed".</span></div>
+        <button class="btn sim" id="sim">Simulate an offer</button></div>`;
+      $("sim").addEventListener("click", startOffer);
+      return;
+    }
+    const misses = state.log.slice(0, 5).filter((o) => MISSES.includes(o.kind)).length;
+    const back = state.back ? `<div class="panel g has-burst">${burst("BACK!", "#ffcc1f", "#e3262f")}<h3>You're back on the list</h3><p>We reset your standing after the August change. Missed signals don't count against you, so offers will start coming in again.</p><button class="linky" id="back-ok">Got it</button></div>` : "";
+    const slowed = misses >= 3 ? `<div class="panel y"><h3>Signals have slowed down</h3><p style="color:#3b3420">A few recent callouts ran out of time before you could answer. Missed signals don't count against you. Keep your phone close and you'll be back to your usual pace.</p></div>` : "";
+    scr.innerHTML = `<div class="statusbar"><span>21:14</span><span>Rook Signal</span></div>
+      <div class="sbody">
+        <div class="who"><h2 class="bang">Vesper</h2><span class="badge ${state.ready === "first" ? "go" : ""}">${state.ready === "first" ? "First up · 30 min" : "Available"}</span></div>
+        ${back}
+        <div id="slot"></div>
+        ${readyHTML()}
+        ${slowed}
+        <div class="panel"><h3>Your signal meter</h3>${meter(VESPER)}</div>
+        <div><p class="log-title">Mission log</p><div class="log" id="log"></div></div>
+        <button class="btn hot sim" id="sim">Simulate a signal</button>
+      </div>`;
+    renderLog();
+    if ($("back-ok")) $("back-ok").addEventListener("click", () => { state.back = false; renderPhone(); });
+    const r = $("ready");
+    if (r) r.addEventListener("click", () => { state.ready = "first"; state.readyUsed = true; renderPhone(); toast("You're first up for the next nearby callout."); });
+    $("sim").addEventListener("click", startOffer);
+  }
+
+  function readyHTML() {
+    const radius = state.radius || 15;
+    if (state.ready === "first") return `<div class="panel g"><h3>First up!</h3><p>You'll be asked first for the next callout within a ${radius}-minute drive that matches your skills. 30 minutes left.</p></div>`;
+    if (state.ready === "paused") return `<button class="ready" disabled><strong>Put me first: back tomorrow</strong><span>You were first in line and missed one, so this rests until tomorrow. The miss still doesn't count against you.</span></button>`;
+    if (state.readyUsed) return `<button class="ready" disabled><strong>Put me first: again at 01:14</strong><span>You can use this once every 4 hours.</span></button>`;
+    return `<button class="ready" id="ready"><strong>I'm free now: put me first!</strong><span>First in line for the next callout within a ${radius}-minute drive, for 30 minutes. Once every 4 hours.</span></button>`;
+  }
+
+  function renderLog() {
+    const icon = (k) => k === "taken" || k === "grace" ? `<span class="ico yes" aria-hidden="true">✓</span>` : k === "delivery" ? `<span class="ico phone" aria-hidden="true">!</span>` : k === "declined" ? `<span class="ico no" aria-hidden="true">✋</span>` : `<span class="ico miss" aria-hidden="true">⏱</span>`;
+    $("log").innerHTML = state.log.map((o) => {
+      const miss = MISSES.includes(o.kind);
+      const said = miss && o.reason ? `<span class="said">You said: ${esc(o.reason)}</span>` : "";
+      const tell = miss && !o.reason ? `<button class="btn" data-tell="${o.id}">Tell us what happened</button>` : "";
+      return `<div class="log-item"><button class="log-head" aria-expanded="false">${icon(o.kind)}<span><span class="log-what">${esc(o.what)}</span><span class="log-ctx">${esc(o.ctx)}</span><span class="log-ctx">${esc(o.when)}</span></span><span aria-hidden="true">▾</span></button><div class="log-detail" hidden><span>${esc(o.detail)}</span>${said}${tell}</div></div>`;
+    }).join("");
+    $("log").querySelectorAll(".log-head").forEach((b) => b.addEventListener("click", () => { const d = b.nextElementSibling; d.hidden = !d.hidden; b.setAttribute("aria-expanded", String(!d.hidden)); }));
+    $("log").querySelectorAll("[data-tell]").forEach((b) => b.addEventListener("click", () => { showMissed(state.log.find((o) => o.id === +b.dataset.tell)); $("slot").scrollIntoView({ block: "nearest" }); }));
+  }
+
+  // ---------- the signal ----------
+  function signalHTML(grace, left, total) {
+    const p = Math.round(left / total * 100);
+    const firstNote = state.ready === "first" ? `<p class="where">You were first up for this one.</p>` : "";
+    return `<div class="signal ${grace ? "grace" : ""}" id="sig" role="alert">
+      <div class="sig-top"><span class="bang">${grace ? "Still lit!" : "Signal!"}</span><span class="urgent">${CALL.urgency}</span></div>
+      <div class="what">${CALL.type}</div>
+      <div class="dist"><div><div class="drive">${CALL.drive} <small>MIN DRIVE</small></div><p class="where">${CALL.km} from you · ${CALL.area}</p></div>${mapSVG()}</div>
+      <p class="times">Leave by ${CALL.leave} · arrive by ${CALL.arrive}</p>
+      <div class="tags">${CALL.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      ${firstNote}
+      <div class="take-row">
+        <div class="ring" style="--p:${p}"><button class="take" id="take"><span><b>${grace ? "Grab it!" : "Take it"}</b><span id="tleft">${grace ? "+0:" + pad(left) : "0:" + pad(left)}</span></span></button></div>
+        <div class="take-side"><span>${grace ? "Another hero is being asked too. First tap wins, and you'll know right away." : "Accept now, gear up after."}</span><button class="pass" id="pass">${grace ? "Let it go" : "Not this one"}</button></div>
+      </div>
+    </div>`;
+  }
+
+  function sfx(text) {
+    const s = $("sig"); if (!s) return;
+    s.classList.remove("shake"); void s.offsetWidth; s.classList.add("shake");
+    const b = document.createElement("span"); b.className = "sfx"; b.textContent = text; b.setAttribute("aria-hidden", "true"); s.appendChild(b);
+    setTimeout(() => b.remove(), 1400);
+  }
+
+  function startOffer() {
+    clearInterval(state.timer);
+    $("sim").disabled = true;
+    let left = 60;
+    if (state.mode === "today") {
+      $("slot").innerHTML = `<div class="dull-offer"><b>New callout · 9 min away</b><span id="tleft">0:60</span><div class="row-btns"><button id="take">Accept</button><button id="pass">Decline</button></div></div>`;
+      $("take").addEventListener("click", () => endToday("Taken. Nothing else changes on screen."));
+      $("pass").addEventListener("click", () => endToday("Declined. No record Vesper can see."));
+      state.timer = setInterval(() => { left -= 3; if (left <= 0) return endToday("The offer vanished. Nothing tells Vesper it was ever there."); $("tleft").textContent = "0:" + pad(left); }, 300);
+      return;
+    }
+    $("slot").innerHTML = signalHTML(false, left, 60);
+    $("take").addEventListener("click", () => finish("taken"));
+    $("pass").addEventListener("click", () => finish("declined"));
+    state.timer = setInterval(() => {
+      left -= 3;
+      if (left <= 0) return startGrace();
+      $("tleft").textContent = "0:" + pad(left);
+      document.querySelector(".ring").style.setProperty("--p", Math.round(left / 60 * 100));
+      if (left === 30) { sfx("BZZT!"); toast("Second buzz: 30 seconds left"); }
+    }, 300);
+  }
+
+  function startGrace() {
+    clearInterval(state.timer);
+    let left = 15;
+    $("slot").innerHTML = signalHTML(true, left, 15);
+    sfx("STILL LIT!");
+    $("take").addEventListener("click", () => finish(left > 5 ? "grace" : "raced"));
+    $("pass").addEventListener("click", () => finish("timeout"));
+    state.timer = setInterval(() => {
+      left -= 1;
+      if (left <= 0) return finish("timeout");
+      $("tleft").textContent = "+0:" + pad(left);
+      document.querySelector(".ring").style.setProperty("--p", Math.round(left / 15 * 100));
+    }, 300);
+  }
+
+  function endToday(msg) { clearInterval(state.timer); toast(msg); renderPhone(); }
+
+  function finish(kind) {
+    clearInterval(state.timer);
+    const wasFirst = state.ready === "first";
+    const labels = {
+      taken: ["Taken", "Thanks for answering the signal."],
+      grace: ["Taken in the grace window", "You tapped after 60 seconds, before anyone else. It counts as a yes."],
+      raced: ["Another hero took it first", "You tapped in the grace window, a moment after another hero. Doesn't count against you."],
+      declined: ["You passed on this one", "A pass is a real no, so it still counts."],
+      timeout: ["Ran out of time", "No tap within 60 seconds or the grace window. Doesn't count against you."]
+    };
+    const entry = { id: Date.now(), when: "Just now", kind, what: labels[kind][0], ctx: CALL_LINE, reason: null, detail: labels[kind][1] };
+    state.log.unshift(entry);
+    if (wasFirst) state.ready = (kind === "timeout" || kind === "raced") ? "paused" : "available";
+    renderPhone();
+    if (kind === "taken" || kind === "grace") {
+      $("slot").innerHTML = `<div class="win has-burst" role="status">${burst("POW!", "#ffcc1f", "#e3262f")}<span class="bang">It's yours!</span><span><b>${CALL_LINE}</b></span><span>Leave by ${CALL.leave}, arrive by ${CALL.arrive}. Go get 'em.</span></div>`;
+    } else if (kind === "declined") {
+      $("slot").innerHTML = `<div class="panel"><h3>Passed</h3><p>Logged as a no. The next hero is being asked.</p></div>`;
+    } else {
+      showMissed(entry, kind === "raced");
+    }
+  }
+
+  // ---------- signal missed ----------
+  function showMissed(o, raced) {
+    if (!o) return;
+    $("slot").innerHTML = `<div class="missed" role="status">
+      <div class="missed-head">${raced ? "Another hero got it" : "Signal missed"}<span>${esc(o.when)}</span></div>
+      <div class="missed-body">
+        <span class="missed-ctx">${esc(o.ctx)}</span>
+        <span>It went to another hero. This doesn't count against you.</span>
+        <b>What happened? One tap, optional.</b>
+        <div class="chips">${REASONS.map((r, i) => `<button class="chip" data-r="${i}" aria-pressed="${o.reason === r}">${r}</button>`).join("")}</div>
+        <span class="ok-line">Your answer won't change your offers. It helps us fix the right thing, and Kip sees it too.</span>
+        <div class="follow" id="follow"></div>
+        <div class="row-btns"><button class="btn" id="m-close">Dismiss</button></div>
+      </div></div>`;
+    $("slot").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => {
+      o.reason = REASONS[+b.dataset.r];
+      $("slot").querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      followUp(o.reason);
+      renderLog();
+    }));
+    $("m-close").addEventListener("click", () => { $("slot").innerHTML = ""; });
+  }
+
+  function followUp(reason) {
+    const f = $("follow");
+    if (reason === REASONS[4]) {
+      f.innerHTML = `<span>Want us to only send callouts within a shorter drive?</span><div class="row-btns">${[15, 20, 30].map((m) => `<button class="btn" data-rad="${m}">Within ${m} min</button>`).join("")}<button class="btn" data-rad="0">Keep as is</button></div>`;
+      f.querySelectorAll("[data-rad]").forEach((b) => b.addEventListener("click", () => { const m = +b.dataset.rad; state.radius = m || null; f.innerHTML = `<span>${m ? `Done. You'll only get callouts within a ${m}-minute drive. Change it any time in settings.` : "No change."}</span>`; }));
+    } else if (reason === REASONS[1]) {
+      f.innerHTML = `<span>Sorry about that. Let's check your alerts.</span><div class="row-btns"><button class="btn hot" id="test">Send a test alert</button></div>`;
+      $("test").addEventListener("click", () => {
+        f.innerHTML = `<span><b>The test took 41 seconds to arrive.</b> That's too slow. Try turning off battery saver for Rook and allowing alerts on the lock screen, then test again.</span><div class="row-btns"><button class="btn hot" id="test2">Test again</button><button class="btn" id="help">Get help from Support</button></div>`;
+        $("test2").addEventListener("click", () => { f.innerHTML = `<span><b>Arrived in 2 seconds.</b> Your alerts are working now.</span>`; });
+        $("help").addEventListener("click", () => toast("Support ticket opened with your test results attached."));
+      });
+    } else if (reason === REASONS[3]) {
+      f.innerHTML = `<span>Thanks. We'll check why you were shown as available while on a callout.</span>`;
+    } else {
+      f.innerHTML = `<span>Thanks. This helps us fix the right thing.</span>`;
+    }
+  }
+
+  // ---------- Handler HQ ----------
+  function card(key) {
+    const mite = key === "mite";
+    const name = mite ? "Meteor Mite" : "The Gale";
+    const data = mite ? MITE : GALE;
+    const week = mite ? 1 : 21, usual = mite ? 11 : 13, taken = mite ? 0 : 16;
+    if (state.mode !== "new") {
+      return `<article class="card"><div class="card-band band-plain"><span class="bang">${name}</span><span class="badge">Available</span></div><div class="card-body"><div class="nums"><div><b>${week}</b><span>offers this week</span></div><div><b>${taken}</b><span>taken</span></div></div><div class="settings">Alert sound: Bing (same for everyone)</div></div></article>`;
+    }
+    const stamp = mite ? `<span class="stamp quiet">Gone quiet</span>` : `<span class="stamp over">Overloaded 1.6×</span>`;
+    const reason = mite
+      ? `<div class="reason-box"><b>Why:</b><span>Missed 4 of the last 5 signals (3 ran out of time, 1 reached the phone late). Not fewer jobs nearby.</span><span><b>Mite says:</b> phone didn't alert (2), away from phone (1).</span></div>`
+      : `<div class="reason-box"><b>Why:</b><span>Picking up work from nearby heroes who've gone quiet, including Mite. Still taking 76%.</span></div>`;
+    const acts = mite
+      ? `<div class="row-btns"><button class="btn hot" data-act="test">Send a test alert</button><button class="btn" data-act="ready"${state.miteReady ? " disabled" : ""}>${state.miteReady ? "Mite is first up ✓" : "Mark Mite ready"}</button><button class="btn" data-act="msg">Message Mite</button></div>`
+      : `<div class="row-btns"><button class="btn hot" data-act="ease"${state.galeEase ? " disabled" : ""}>${state.galeEase ? "Easing off · 3 h ✓" : "Ease off for 3 hours"}</button><button class="btn" data-act="checkin">Check in</button></div>`;
+    return `<article class="card"><div class="card-band ${mite ? "band-quiet" : "band-over"}"><span class="bang">${name}</span><span class="badge">Kip</span></div>${stamp}
+      <div class="card-body">
+        <div class="nums"><div><b>${week}</b><span>this week</span></div><div><b>${usual}</b><span>usual</span></div><div><b>${taken}</b><span>taken</span></div></div>
+        ${meter(data)}
+        ${reason}
+        ${acts}
+        <div class="settings">Alert me <button class="mini-sw" role="switch" aria-checked="${state.alerts[key]}" aria-label="Alert me for ${name}" data-alert="${key}"></button>
+          <label>Sound <select data-sound="${key}" aria-label="Sound for ${name}">${["Knock", "Chime", "Bell"].map((s) => `<option${state.sounds[key] === s ? " selected" : ""}>${s}</option>`).join("")}</select></label>
+          <button class="btn" data-sim="${key}">Simulate signal</button></div>
+      </div></article>`;
+  }
+
+  function renderHQ() {
+    $("hq").classList.toggle("night", state.night && state.mode === "new");
+    $("night-row").hidden = state.mode !== "new";
+    $("hq-banner").innerHTML = "";
+    $("cards").innerHTML = card("mite") + card("gale");
+    const c = $("cards");
+    c.querySelectorAll("[data-alert]").forEach((b) => b.addEventListener("click", () => { const k = b.dataset.alert; state.alerts[k] = !state.alerts[k]; b.setAttribute("aria-checked", String(state.alerts[k])); }));
+    c.querySelectorAll("[data-sound]").forEach((s) => s.addEventListener("change", () => { state.sounds[s.dataset.sound] = s.value; toast(`Sound set to ${s.value}.`); }));
+    c.querySelectorAll("[data-sim]").forEach((b) => b.addEventListener("click", () => kipSignal(b.dataset.sim)));
+    const acts = {
+      test: () => toast("Test alert sent to Mite: arrived in 41 seconds. Too slow, so Mite gets tips to fix it."),
+      ready: () => { state.miteReady = true; renderHQ(); toast("Mite is first up for the next nearby callout, for 30 minutes."); },
+      msg: () => toast("Message drafted: 'Your signals ran out of time a few times. Here's how to get back up.'"),
+      ease: () => { state.galeEase = true; renderHQ(); toast("The Gale will get fewer signals for 3 hours."); },
+      checkin: () => toast("Message drafted: 'You've been carrying a lot. Want to ease off?'")
+    };
+    c.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", acts[b.dataset.act]));
+  }
+
+  function kipSignal(key) {
+    const name = key === "mite" ? "Meteor Mite" : "The Gale";
+    if (!state.alerts[key]) return toast(`Alerts are off for ${name}.`);
+    clearInterval(state.kipTimer);
+    let left = 60;
+    $("hq-banner").innerHTML = `<div class="hq-banner"><div class="alert-bar" role="alert"><span>🔔 ${state.sounds[key]} · Signal for ${name}: ${CALL.type}, ${CALL.drive} min drive</span><span id="kleft">0:60</span></div></div>`;
+    state.kipTimer = setInterval(() => {
+      left -= 3;
+      if (left <= 0) { clearInterval(state.kipTimer); $("hq-banner").innerHTML = `<div class="hq-banner"><div class="alert-bar">Signal for ${name} ran out of time. It's in their mission log.</div></div>`; return; }
+      const k = $("kleft"); if (k) k.textContent = "0:" + pad(left);
+    }, 300);
+  }
+
+  function setMode(m) {
+    state.mode = m;
+    clearInterval(state.timer); clearInterval(state.kipTimer);
+    $("t-today").setAttribute("aria-pressed", String(m === "today"));
+    $("t-new").setAttribute("aria-pressed", String(m === "new"));
+    renderPhone(); renderHQ();
+  }
+  $("t-today").addEventListener("click", () => setMode("today"));
+  $("t-new").addEventListener("click", () => setMode("new"));
+  $("night").addEventListener("click", () => { state.night = !state.night; $("night").setAttribute("aria-checked", String(state.night)); renderHQ(); toast(state.night ? "Night mode on. Kip's top request." : "Night mode off."); });
+  setMode("new");
+})();
+</script>

@@ -1,0 +1,476 @@
+<title>Dispatch Points Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ground: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f5f7f9;
+    --ink: #17202b;
+    --ink-soft: #4b5868;
+    --ink-faint: #7d8896;
+    --line: #d5dce4;
+    --accent: #d9541e;
+    --quiet: #b7791f;
+    --quiet-bg: #fdf3e1;
+    --over: #c2364b;
+    --over-bg: #fbe7ea;
+    --ok: #237a52;
+    --ok-bg: #e2f3ea;
+    --info: #2a5d9a;
+    --info-bg: #e6eef8;
+    --bar: #9fb0c2;
+    --shadow: 0 1px 2px rgba(23,32,43,.06), 0 8px 24px rgba(23,32,43,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #0f141a; --surface: #182029; --surface-2: #1f2933;
+      --ink: #e8edf2; --ink-soft: #aab5c2; --ink-faint: #7a8696; --line: #2c3946;
+      --accent: #f07a45; --quiet: #e8b25a; --quiet-bg: #33281a; --over: #f07c8e; --over-bg: #3a1f26;
+      --ok: #5cc795; --ok-bg: #173327; --info: #8db8ec; --info-bg: #1b2b3f; --bar: #4f6175;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #0f141a; --surface: #182029; --surface-2: #1f2933;
+    --ink: #e8edf2; --ink-soft: #aab5c2; --ink-faint: #7a8696; --line: #2c3946;
+    --accent: #f07a45; --quiet: #e8b25a; --quiet-bg: #33281a; --over: #f07c8e; --over-bg: #3a1f26;
+    --ok: #5cc795; --ok-bg: #173327; --info: #8db8ec; --info-bg: #1b2b3f; --bar: #4f6175;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--ground); color: var(--ink); font: 16px/1.5 "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; padding-inline: 16px; padding-block: 24px 64px; }
+  .wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 18px; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+  h1 { font-size: clamp(24px, 4vw, 32px); line-height: 1.15; margin: 0; }
+  h2 { font-size: 18px; margin: 0; }
+  h3 { font-size: 15px; margin: 0; }
+  p { margin: 0; }
+  button, select, input { font: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  .intro { display: grid; gap: 8px; }
+  .intro p { color: var(--ink-soft); max-width: 78ch; }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 14px; box-shadow: var(--shadow); }
+  .panel-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .panel-title span { font-size: 13px; color: var(--ink-faint); }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .preset { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 14px; font-weight: 700; }
+  .preset[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+  .dial { display: grid; gap: 4px; }
+  .dial-head { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+  .dial-head label { font-weight: 700; }
+  .dial-head output { font-family: "IBM Plex Mono", monospace; color: var(--accent); font-weight: 600; }
+  .dial small { color: var(--ink-faint); font-size: 12px; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 14px; }
+  .check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+  .heroes { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .heroes th { text-align: left; color: var(--ink-faint); font-weight: 700; padding: 4px; border-bottom: 1px solid var(--line); }
+  .heroes td { padding: 4px; border-bottom: 1px solid var(--line); }
+  .heroes select { font-size: 12px; padding: 2px 4px; }
+  .heroes-wrap { overflow-x: auto; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 2px; }
+  .tile .k { font-size: 13px; color: var(--ink-faint); }
+  .tile .v { font-size: 26px; font-weight: 600; }
+  .tile .d { font-size: 13px; color: var(--ink-soft); }
+  .tile.bad { border-color: var(--quiet); }
+  .tile.good { border-color: var(--ok); }
+
+  .check-banner { border-radius: 12px; padding: 12px 14px; font-size: 15px; display: flex; gap: 10px; align-items: start; }
+  .check-banner.ok { background: var(--ok-bg); }
+  .check-banner.warn { background: var(--quiet-bg); }
+  .check-banner.info { background: var(--info-bg); }
+
+  .compare { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .compare th, .compare td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; }
+  .compare th:first-child, .compare td:first-child { text-align: left; }
+  .compare th { color: var(--ink-faint); font-size: 13px; }
+  .table-wrap { overflow-x: auto; }
+
+  .strips { display: grid; gap: 2px; }
+  .strip { display: grid; grid-template-columns: 130px 1fr 110px; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 8px; border: 0; background: transparent; color: var(--ink); text-align: left; width: 100%; }
+  .strip:hover, .strip[aria-pressed="true"] { background: var(--surface-2); }
+  .strip .nm { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip .bars { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; align-items: end; height: 34px; position: relative; }
+  .strip .bars span { display: block; position: relative; height: 100%; }
+  .strip .bars i { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bar); border-radius: 2px 2px 0 0; }
+  .strip .bars i.post { background: var(--info); }
+  .strip .bars b { position: absolute; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--ink); opacity: .55; }
+  .chip { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; justify-self: start; white-space: nowrap; }
+  .chip.stuck { background: var(--quiet-bg); color: var(--quiet); }
+  .chip.over { background: var(--over-bg); color: var(--over); }
+  .chip.fine { background: var(--ok-bg); color: var(--ok); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--ink-soft); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+  .legend b { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); opacity: .55; margin-right: 4px; }
+
+  .detail { display: grid; gap: 8px; }
+  .detail svg { width: 100%; height: auto; display: block; }
+  .detail svg text { fill: var(--ink-faint); font-size: 11px; font-family: "IBM Plex Mono", monospace; }
+  .fine { font-size: 13px; color: var(--ink-faint); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .assume { font-size: 13px; color: var(--ink-soft); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+  @media (max-width: 520px) { .strip { grid-template-columns: 96px 1fr; } .strip .chip { grid-column: 2; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div class="eyebrow">Rook Dispatch · points simulator</div>
+    <h1>Replay the summer under different rules</h1>
+    <p>Set the rules on the left, then see who gets stuck, who gets overloaded, and what it costs in speed. The run replays 29 Jun – 6 Sep as if the 12 Aug release had shipped with your rules. Bars are simulated; dots are the real callout history.</p>
+  </header>
+
+  <div class="layout">
+    <aside class="panel" aria-label="Rules">
+      <div class="panel-title"><h2>1. The rules</h2><span>from 12 Aug</span></div>
+      <div class="presets" id="presets"></div>
+
+      <div class="dial"><div class="dial-head"><label for="timer">Time to answer</label><output id="o-timer"></output></div>
+        <input type="range" id="timer" min="30" max="120" step="5"><small>4.2 cut this from 90 to 60 seconds.</small></div>
+      <div class="dial"><div class="dial-head"><label for="yes">A "yes" earns</label><output id="o-yes"></output></div>
+        <input type="range" id="yes" min="0.02" max="0.20" step="0.01"></div>
+      <div class="dial"><div class="dial-head"><label for="no">A "no" costs</label><output id="o-no"></output></div>
+        <input type="range" id="no" min="0" max="0.25" step="0.01"></div>
+      <div class="dial"><div class="dial-head"><label for="to">Running out of time costs</label><output id="o-to"></output></div>
+        <input type="range" id="to" min="0" max="0.25" step="0.01"><small>Today this is the same as a "no".</small></div>
+      <div class="dial"><div class="dial-head"><label for="fade">A bad stretch fades over</label><output id="o-fade"></output></div>
+        <input type="range" id="fade" min="0" max="8" step="1"><small>0 = never (today). Wen's 2019 question.</small></div>
+      <div class="dial"><div class="dial-head"><label for="fadeTo">Fades back toward</label></div>
+        <select id="fadeTo"><option value="mid">the middle (0.5), as Wen's note says</option><option value="usual">the responder's usual level</option></select></div>
+      <div class="dial"><div class="dial-head"><label for="prox">Closeness weight</label><output id="o-prox"></output></div>
+        <input type="range" id="prox" min="0.30" max="0.80" step="0.05"><small>Recent yeses get the rest of 0.85. Skills (0.15) aren't modelled.</small></div>
+      <label class="check"><input type="checkbox" id="reset"> Installing the release resets every score to 0.5</label>
+
+      <div class="panel-title"><h2>2. The heroes</h2><span>assumptions</span></div>
+      <div class="heroes-wrap"><table class="heroes" id="heroes"></table></div>
+      <p class="assume"><strong>Pretend map.</strong> We have no real travel times. Each responder has a home patch where emergencies happen; patches sit in four neighbourhoods of three, plus four loners (Bulwark, Ashgrove, Halfmoon, Longcast). Everyone is available 85% of the time. Mite and The Gale share a city, as Kip said. "Slow to answer" responders mostly answer in 60–90 s and don't speed up after the release; others adapt within a week.</p>
+    </aside>
+
+    <main class="panel" aria-label="Results">
+      <div class="panel-title"><h2>3. What happens</h2><span id="runinfo"></span></div>
+      <div id="banner"></div>
+      <div class="tiles" id="tiles"></div>
+      <div class="table-wrap"><table class="compare" id="compare"></table></div>
+
+      <div class="panel-title"><h2>Offers per week, every responder</h2><span>click one for detail</span></div>
+      <div class="legend"><span><i style="background:var(--bar)"></i>before 12 Aug</span><span><i style="background:var(--info)"></i>after 12 Aug</span><span><b></b>real callout history</span></div>
+      <div class="strips" id="strips"></div>
+      <div class="detail" id="detail"></div>
+      <p class="fine">A decision aid, not proof. Answer times, phone delays and the map are assumptions until Wen's offer log arrives; then swap them for real values. Averaged over 6 runs with fixed seeds, so the same settings always give the same answer.</p>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  var WEEKS = ["29 Jun","6 Jul","13 Jul","20 Jul","27 Jul","3 Aug","10 Aug","17 Aug","24 Aug","31 Aug"];
+  var RELEASE_DAY = 44, ADAPT_DAY = 51, DAYS = 70, INCIDENTS_PER_WEEK = 132, RUNS = 6;
+  var HEROES = [
+    { n: "Captain Vantage", x: 13, y: 12, r: 0.74, real: [12,13,12,11,12,12,13,15,17,18] },
+    { n: "Cindermark", x: 12, y: 28, r: 0.80, real: [9,9,8,10,9,9,10,11,12,12] },
+    { n: "Corporal Ashgrove", x: 2, y: 20, r: 0.78, real: [10,11,10,9,10,10,10,8,7,7] },
+    { n: "Farlight", x: 9, y: 29, r: 0.74, real: [12,12,11,12,13,12,10,3,1,0], slow: true },
+    { n: "Halfmoon", x: 20, y: 2, r: 0.73, real: [11,10,11,12,11,11,11,9,8,8] },
+    { n: "Ironvale", x: 31, y: 31, r: 0.77, real: [8,8,9,8,7,8,9,10,11,12] },
+    { n: "Meteor Mite", x: 9, y: 9, r: 0.69, real: [11,12,10,11,12,11,10,4,2,1], slow: true },
+    { n: "Nightwell", x: 31, y: 11, r: 0.76, real: [15,14,15,16,15,15,16,18,20,21] },
+    { n: "Sgt. Bulwark", x: 20, y: 38, r: 0.76, real: [9,9,10,9,8,9,10,10,11,11] },
+    { n: "Sgt. Falkirk", x: 11, y: 31, r: 0.80, real: [10,10,11,10,9,10,11,13,15,16] },
+    { n: "Stormwrack", x: 28, y: 12, r: 0.79, real: [13,13,12,14,13,13,14,16,18,19] },
+    { n: "The Drift", x: 28, y: 32, r: 0.84, real: [6,6,7,6,6,6,7,7,8,8] },
+    { n: "The Gale", x: 11, y: 10, r: 0.78, real: [13,12,13,14,13,13,15,17,20,21] },
+    { n: "The Longcast", x: 38, y: 20, r: 0.74, real: [7,7,8,7,7,7,8,8,9,9] },
+    { n: "The Undertow", x: 29, y: 29, r: 0.78, real: [12,11,12,13,12,12,11,4,1,1], slow: true },
+    { n: "Vesper", x: 29, y: 9, r: 0.82, real: [14,13,15,14,13,14,12,5,2,1], slow: true }
+  ];
+  HEROES.forEach(function (h) { h.base = h.real.slice(0, 6).reduce(function (a, b) { return a + b; }, 0) / 6; h.delay = 0; h.slow = !!h.slow; h.def = { slow: h.slow }; });
+  var FOUR = ["Farlight", "Meteor Mite", "The Undertow", "Vesper"];
+  var AVAILABLE = 0.85;
+
+  var PRESETS = {
+    "4.2 as shipped":      { timer: 60, yes: 0.08, no: 0.12, to: 0.12, fade: 0, fadeTo: "mid",   prox: 0.60, reset: false },
+    "Brief proposal":      { timer: 60, yes: 0.08, no: 0.12, to: 0.04, fade: 3, fadeTo: "usual", prox: 0.60, reset: false },
+    "Back to 90 seconds":  { timer: 90, yes: 0.08, no: 0.12, to: 0.12, fade: 0, fadeTo: "mid",   prox: 0.60, reset: false },
+    "Timeouts don't count":{ timer: 60, yes: 0.08, no: 0.12, to: 0.00, fade: 0, fadeTo: "mid",   prox: 0.60, reset: false },
+    "Old weights":         { timer: 60, yes: 0.08, no: 0.12, to: 0.12, fade: 0, fadeTo: "mid",   prox: 0.45, reset: false },
+    "4.2 + install reset": { timer: 60, yes: 0.08, no: 0.12, to: 0.12, fade: 0, fadeTo: "mid",   prox: 0.60, reset: true },
+    "Before 4.2":          { timer: 90, yes: 0.08, no: 0.12, to: 0.12, fade: 0, fadeTo: "mid",   prox: 0.45, reset: false }
+  };
+  var rules = Object.assign({}, PRESETS["4.2 as shipped"]);
+  var activePreset = "4.2 as shipped";
+  var selected = "Vesper";
+  var baseline42 = null;
+
+  function $(id) { return document.getElementById(id); }
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+  // Answer behaviour: share answering within 60 s, between 60-90 s, after 90 s.
+  function profile(h) { return h.slow ? { fast: 0.30, mid: 0.60 } : { fast: 0.60, mid: 0.28 }; }
+  function declineRate(h) { var p = profile(h); return Math.max(0, 1 - h.r / (p.fast + p.mid)); }
+
+  function answerTime(h, day, r) {
+    var p = profile(h), fast = p.fast, mid = p.mid;
+    if (!h.slow && day >= ADAPT_DAY) { fast = fast + 0.8 * mid; mid = 0.2 * mid; }
+    var u = r(), t;
+    if (u < fast) t = 5 + r() * 50; else if (u < fast + mid) t = 61 + r() * 28; else t = 95 + r() * 105;
+    return t + (day >= RELEASE_DAY ? h.delay : 0);
+  }
+
+  // weights[j]: how often an emergency happens on responder j's patch.
+  function simulate(R, weights, seed, keepScores) {
+    var r = rng(seed);
+    var n = HEROES.length;
+    var score = HEROES.map(function () { return 1; });
+    var offers = HEROES.map(function () { return new Array(10).fill(0); });
+    var taken = HEROES.map(function () { return new Array(10).fill(0); });
+    var dailyScore = keepScores ? HEROES.map(function () { return []; }) : null;
+    var filled = new Array(10).fill(0), unfilled = new Array(10).fill(0), fillTime = new Array(10).fill(0);
+    var perDay = INCIDENTS_PER_WEEK / 7, carry = 0;
+    var dec = HEROES.map(declineRate);
+    var wsum = weights.reduce(function (a, b) { return a + b; }, 0);
+    for (var day = 0; day < DAYS; day++) {
+      var after = day >= RELEASE_DAY;
+      var timer = after ? R.timer : 90;
+      var wP = after ? R.prox : 0.45, wA = 0.85 - wP;
+      var pNo = after ? R.no : 0.12, pTo = after ? R.to : 0.12, pYes = after ? R.yes : 0.08;
+      if (day === RELEASE_DAY && R.reset) score = score.map(function () { return 0.5; });
+      if (after && R.fade > 0) {
+        var k = Math.exp(-Math.LN2 / (7 * R.fade));
+        for (var i = 0; i < n; i++) {
+          var target = R.fadeTo === "usual" ? 1 : 0.5;
+          if (R.fadeTo === "usual" ? score[i] < target : true) score[i] = target + (score[i] - target) * k;
+        }
+      }
+      var w = Math.floor(day / 7);
+      carry += perDay; var count = Math.floor(carry); carry -= count;
+      for (var c = 0; c < count; c++) {
+        var x, y;
+        if (r() < 0.9) {
+          var pick = r() * wsum, owner = 0;
+          while (owner < n - 1 && pick > weights[owner]) { pick -= weights[owner]; owner++; }
+          x = HEROES[owner].x + gauss(r) * 2.5; y = HEROES[owner].y + gauss(r) * 2.5;
+        } else { x = r() * 40; y = r() * 40; }
+        var cand = [];
+        for (var j = 0; j < n; j++) {
+          if (r() > AVAILABLE) continue;
+          var mins = Math.hypot(HEROES[j].x - x, HEROES[j].y - y) * 1.3;
+          var prox = mins >= 45 ? 0 : 1 - mins / 45;
+          cand.push({ j: j, s: wP * prox + wA * score[j] + r() * 1e-6 });
+        }
+        cand.sort(function (a, b) { return b.s - a.s; });
+        var elapsed = 0, done = false;
+        for (var q = 0; q < cand.length; q++) {
+          var id = cand[q].j, h = HEROES[id];
+          offers[id][w]++;
+          if (r() < dec[id]) { score[id] = Math.max(0, score[id] - pNo); elapsed += 12; continue; }
+          var t = answerTime(h, day, r);
+          if (t <= timer) { score[id] = Math.min(1, score[id] + pYes); taken[id][w]++; elapsed += t; done = true; break; }
+          score[id] = Math.max(0, score[id] - pTo); elapsed += timer;
+        }
+        if (done) { filled[w]++; fillTime[w] += elapsed; } else unfilled[w]++;
+      }
+      if (keepScores) for (var z = 0; z < n; z++) dailyScore[z].push(score[z]);
+    }
+    return { offers: offers, taken: taken, filled: filled, unfilled: unfilled, fillTime: fillTime, dailyScore: dailyScore };
+  }
+
+  // Calibrate each patch's share of emergencies so pre-release volume matches the real history.
+  var AVAIL = (function () {
+    var a = HEROES.map(function (h) { return h.base; });
+    var R = PRESETS["Before 4.2"];
+    for (var it = 0; it < 10; it++) {
+      var sum = HEROES.map(function () { return 0; });
+      for (var s = 0; s < 3; s++) {
+        var res = simulate(R, a, 101 + s, false);
+        for (var i = 0; i < HEROES.length; i++) for (var wk = 0; wk < 6; wk++) sum[i] += res.offers[i][wk];
+      }
+      for (var k = 0; k < HEROES.length; k++) {
+        var got = sum[k] / 18 || 0.1;
+        a[k] = Math.max(0.05, a[k] * Math.pow(HEROES[k].base / got, 0.8));
+      }
+    }
+    return a;
+  })();
+
+  function runAll(R) {
+    var acc = null;
+    for (var s = 0; s < RUNS; s++) {
+      var res = simulate(R, AVAIL, 7 + s * 13, s === 0);
+      if (!acc) { acc = res; continue; }
+      ["offers", "taken"].forEach(function (key) { for (var i = 0; i < HEROES.length; i++) for (var w = 0; w < 10; w++) acc[key][i][w] += res[key][i][w]; });
+      ["filled", "unfilled", "fillTime"].forEach(function (key) { for (var w = 0; w < 10; w++) acc[key][w] += res[key][w]; });
+    }
+    ["offers", "taken"].forEach(function (key) { for (var i = 0; i < HEROES.length; i++) for (var w = 0; w < 10; w++) acc[key][i][w] /= RUNS; });
+    ["filled", "unfilled", "fillTime"].forEach(function (key) { for (var w = 0; w < 10; w++) acc[key][w] /= RUNS; });
+    return summarize(acc);
+  }
+
+  function summarize(a) {
+    var n = HEROES.length, s = { raw: a, heroes: [] };
+    var sentW = new Array(10).fill(0), takenW = new Array(10).fill(0);
+    for (var i = 0; i < n; i++) for (var w = 0; w < 10; w++) { sentW[w] += a.offers[i][w]; takenW[w] += a.taken[i][w]; }
+    HEROES.forEach(function (h, i) {
+      var last3 = (a.offers[i][7] + a.offers[i][8] + a.offers[i][9]) / 3;
+      var ratio = last3 / h.base;
+      s.heroes.push({ h: h, offers: a.offers[i], taken: a.taken[i], last3: last3, ratio: ratio, status: ratio < 0.35 ? "stuck" : (ratio > 1.4 ? "over" : "fine") });
+    });
+    s.stuck = s.heroes.filter(function (x) { return x.status === "stuck"; });
+    s.over = s.heroes.filter(function (x) { return x.status === "over"; });
+    s.releaseRate = takenW[6] / sentW[6];
+    s.lastRate = takenW[9] / sentW[9];
+    s.filledLast3 = (a.filled[7] + a.filled[8] + a.filled[9]) / 3;
+    s.unfilledLast3 = (a.unfilled[7] + a.unfilled[8] + a.unfilled[9]) / 3;
+    s.secsLast3 = (a.fillTime[7] + a.fillTime[8] + a.fillTime[9]) / Math.max(1, a.filled[7] + a.filled[8] + a.filled[9]);
+    s.secsBefore = a.fillTime.slice(0, 6).reduce(function (x, y) { return x + y; }, 0) / Math.max(1, a.filled.slice(0, 6).reduce(function (x, y) { return x + y; }, 0));
+    var lastSorted = s.heroes.map(function (x) { return x.offers[9]; }).sort(function (x, y) { return y - x; });
+    s.top4 = (lastSorted[0] + lastSorted[1] + lastSorted[2] + lastSorted[3]) / sentW[9];
+    s.fourLast3 = s.heroes.filter(function (x) { return FOUR.indexOf(x.h.n) >= 0; }).reduce(function (t, x) { return t + x.last3; }, 0);
+    return s;
+  }
+
+  var REAL = { releaseRate: 0.542, lastRate: 0.727, fourLast3: (16 + 6 + 3) / 3, top4: 0.48, filledLast3: (104 + 108 + 120) / 3 };
+
+  function pct(v) { return Math.round(v * 100) + "%"; }
+  function fmt(v, d) { return Number(v).toFixed(d || 0); }
+
+  function buildControls() {
+    var ps = $("presets");
+    ps.innerHTML = Object.keys(PRESETS).map(function (k) { return '<button class="preset" data-p="' + k + '" aria-pressed="false">' + k + '</button>'; }).join("");
+    Array.prototype.forEach.call(ps.querySelectorAll(".preset"), function (b) {
+      b.addEventListener("click", function () { activePreset = b.getAttribute("data-p"); rules = Object.assign({}, PRESETS[activePreset]); syncControls(); run(); });
+    });
+    ["timer", "yes", "no", "to", "fade", "prox"].forEach(function (id) {
+      $(id).addEventListener("input", function () { rules[id] = parseFloat($(id).value); activePreset = null; syncControls(); schedule(); });
+    });
+    $("fadeTo").addEventListener("change", function () { rules.fadeTo = $("fadeTo").value; activePreset = null; syncControls(); run(); });
+    $("reset").addEventListener("change", function () { rules.reset = $("reset").checked; activePreset = null; syncControls(); run(); });
+
+    $("heroes").innerHTML = "<tr><th>Responder</th><th>Slow to answer</th><th>Phone delay</th></tr>" + HEROES.map(function (h, i) {
+      return "<tr><td>" + h.n + "</td><td><input type=\"checkbox\" data-slow=\"" + i + "\"" + (h.slow ? " checked" : "") + " aria-label=\"" + h.n + " slow to answer\"></td><td><select data-delay=\"" + i + "\" aria-label=\"" + h.n + " phone delay\"><option value=\"0\">none</option><option value=\"20\">+20 s</option><option value=\"40\">+40 s</option></select></td></tr>";
+    }).join("");
+    Array.prototype.forEach.call($("heroes").querySelectorAll("[data-slow]"), function (c) {
+      c.addEventListener("change", function () { HEROES[+c.getAttribute("data-slow")].slow = c.checked; run(); });
+    });
+    Array.prototype.forEach.call($("heroes").querySelectorAll("[data-delay]"), function (c) {
+      c.addEventListener("change", function () { HEROES[+c.getAttribute("data-delay")].delay = +c.value; run(); });
+    });
+  }
+
+  function syncControls() {
+    ["timer", "yes", "no", "to", "fade", "prox"].forEach(function (id) { $(id).value = rules[id]; });
+    $("fadeTo").value = rules.fadeTo; $("reset").checked = rules.reset;
+    $("o-timer").textContent = rules.timer + " s";
+    $("o-yes").textContent = "+" + fmt(rules.yes, 2);
+    $("o-no").textContent = "−" + fmt(rules.no, 2);
+    $("o-to").textContent = "−" + fmt(rules.to, 2);
+    $("o-fade").textContent = rules.fade === 0 ? "never" : rules.fade + " wk";
+    $("o-prox").textContent = fmt(rules.prox, 2) + " / " + fmt(0.85 - rules.prox, 2);
+    $("fadeTo").disabled = rules.fade === 0;
+    Array.prototype.forEach.call(document.querySelectorAll(".preset"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-p") === activePreset)); });
+  }
+
+  var pending = null;
+  function schedule() { clearTimeout(pending); pending = setTimeout(run, 120); }
+
+  function heroesAtDefault() { return HEROES.every(function (h) { return h.slow === h.def.slow && h.delay === 0; }); }
+
+  var baseCache = {};
+  function heroKey() { return HEROES.map(function (h) { return (h.slow ? 1 : 0) + ":" + h.delay; }).join("|"); }
+  function run() {
+    var s = runAll(rules);
+    var key = heroKey();
+    if (!baseCache[key]) baseCache[key] = runAll(PRESETS["4.2 as shipped"]);
+    render(s, baseCache[key]);
+  }
+
+  function render(s, base) {
+    $("runinfo").textContent = (activePreset || "Custom rules") + " · " + RUNS + " runs";
+    var stuckNames = s.stuck.map(function (x) { return x.h.n; });
+    var matchesFour = stuckNames.length === 4 && FOUR.every(function (n) { return stuckNames.indexOf(n) >= 0; });
+    var b = "";
+    if (activePreset === "4.2 as shipped" && heroesAtDefault()) {
+      b = matchesFour
+        ? '<div class="check-banner ok">✓ <span><strong>Reality check passes.</strong> Replaying 4.2 as shipped traps exactly the same four responders as the real history (Farlight, Meteor Mite, The Undertow, Vesper). Compare the other numbers below.</span></div>'
+        : '<div class="check-banner warn">✗ <span><strong>Reality check: partial match.</strong> Stuck in this run: ' + (stuckNames.join(", ") || "nobody") + '. Real history: the four above. Treat other presets with extra caution.</span></div>';
+    } else {
+      b = '<div class="check-banner info">ⓘ <span>Compared with <strong>4.2 as shipped</strong> (same assumptions). Load that preset to see the reality check against real data.</span></div>';
+    }
+    $("banner").innerHTML = b;
+
+    var dSecs = s.secsLast3 - base.secsLast3;
+    $("tiles").innerHTML =
+      tile("Stuck responders", s.stuck.length + " of 16", s.stuck.length ? s.stuck.map(function (x) { return x.h.n; }).join(", ") : "nobody stuck", s.stuck.length ? "bad" : "good") +
+      tile("Overloaded (>1.4× usual)", s.over.length, s.over.map(function (x) { return x.h.n; }).join(", ") || "nobody", s.over.length ? "bad" : "good") +
+      tile("Jobs filled / week", fmt(s.filledLast3), "last 3 weeks · " + fmt(s.unfilledLast3, 1) + " unfilled", "") +
+      tile("Seconds to fill a job", fmt(s.secsLast3), (dSecs >= 0 ? "+" : "") + fmt(dSecs, 1) + " s vs 4.2 · before release " + fmt(s.secsBefore), Math.abs(dSecs) > 10 ? "bad" : "") +
+      tile("Busiest 4 carry", pct(s.top4), "of offers, last week", "");
+
+    $("compare").innerHTML = "<tr><th>Measure</th><th>This run</th><th>4.2 as shipped (sim)</th><th>Real history</th></tr>" +
+      row("Acceptance, release week", pct(s.releaseRate), pct(base.releaseRate), pct(REAL.releaseRate)) +
+      row("Acceptance, week of 31 Aug", pct(s.lastRate), pct(base.lastRate), pct(REAL.lastRate)) +
+      row("The four's offers / week (last 3 wks, combined)", fmt(s.fourLast3, 1), fmt(base.fourLast3, 1), fmt(REAL.fourLast3, 1)) +
+      row("Busiest 4's share, last week", pct(s.top4), pct(base.top4), pct(REAL.top4)) +
+      row("Jobs filled / week (last 3 wks)*", fmt(s.filledLast3), fmt(base.filledLast3), fmt(REAL.filledLast3)) +
+      "<tr><td colspan=\"4\" class=\"fine\">*The simulator assumes demand stayed at 132 a week, so it can't reproduce the real drop. Whether that drop was fewer emergencies or unfilled callouts is still open (hypotheses #6 and #8).</td></tr>";
+
+    var max = 26;
+    $("strips").innerHTML = s.heroes.map(function (x) {
+      var bars = x.offers.map(function (v, w) {
+        var real = x.h.real[w];
+        return '<span title="' + WEEKS[w] + ": sim " + fmt(v, 1) + ", real " + real + '"><i class="' + (w >= 7 ? "post" : "") + '" style="height:' + Math.min(100, v / max * 100) + '%"></i><b style="bottom:calc(' + Math.min(100, real / max * 100) + '% - 3px)"></b></span>';
+      }).join("");
+      var chip = x.status === "stuck" ? '<span class="chip stuck">Stuck · ' + pct(x.ratio) + ' of usual</span>' : (x.status === "over" ? '<span class="chip over">Overloaded · ' + fmt(x.ratio, 1) + '×</span>' : '<span class="chip fine">' + pct(x.ratio) + ' of usual</span>');
+      return '<button class="strip" data-h="' + x.h.n + '" aria-pressed="' + (x.h.n === selected) + '"><span class="nm">' + x.h.n + '</span><span class="bars">' + bars + '</span>' + chip + '</button>';
+    }).join("");
+    Array.prototype.forEach.call($("strips").querySelectorAll(".strip"), function (btn) {
+      btn.addEventListener("click", function () { selected = btn.getAttribute("data-h"); render(s, base); });
+    });
+    renderDetail(s);
+  }
+
+  function tile(k, v, d, cls) { return '<div class="tile ' + (cls || "") + '"><span class="k">' + k + '</span><span class="v mono">' + v + '</span><span class="d">' + d + '</span></div>'; }
+  function row(k, a, b, c) { return "<tr><td>" + k + "</td><td class=\"mono\">" + a + "</td><td class=\"mono\">" + b + "</td><td class=\"mono\">" + c + "</td></tr>"; }
+
+  function renderDetail(s) {
+    var idx = HEROES.findIndex(function (h) { return h.n === selected; });
+    var x = s.heroes[idx];
+    var scores = s.raw.dailyScore[idx];
+    var W = 640, H = 170, L = 34, B = 24, T = 10, Rr = 10;
+    var pw = W - L - Rr, ph = H - T - B;
+    var pts = scores.map(function (v, d) { return (L + d / (DAYS - 1) * pw).toFixed(1) + "," + (T + (1 - v) * ph).toFixed(1); }).join(" ");
+    var relX = (L + RELEASE_DAY / (DAYS - 1) * pw).toFixed(1);
+    var grid = [0, 0.5, 1].map(function (v) { var yy = (T + (1 - v) * ph).toFixed(1); return '<line x1="' + L + '" x2="' + (W - Rr) + '" y1="' + yy + '" y2="' + yy + '" stroke="var(--line)"/><text x="' + (L - 6) + '" y="' + (+yy + 4) + '" text-anchor="end">' + v + '</text>'; }).join("");
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Score over the summer for ' + x.h.n + '">' + grid +
+      '<line x1="' + relX + '" x2="' + relX + '" y1="' + T + '" y2="' + (H - B) + '" stroke="var(--accent)" stroke-dasharray="4 4"/>' +
+      '<text x="' + (+relX + 4) + '" y="' + (T + 10) + '">12 Aug</text>' +
+      '<polyline points="' + pts + '" fill="none" stroke="var(--info)" stroke-width="2.5"/>' +
+      '<text x="' + L + '" y="' + (H - 6) + '">29 Jun</text><text x="' + (W - Rr) + '" y="' + (H - 6) + '" text-anchor="end">6 Sep</text></svg>';
+    var p = profile(x.h);
+    $("detail").innerHTML = '<div class="two"><div><h3>' + x.h.n + ': score over the summer (one run)</h3>' + svg + '</div>' +
+      '<div class="assume"><strong>Assumptions for ' + x.h.n + '</strong><br>Usual pre-release offers: ' + fmt(x.h.base, 1) + '/wk, accepting ' + pct(x.h.r) + '.<br>Answers within 60 s: ' + pct(p.fast) + ', 60–90 s: ' + pct(p.mid) + (x.h.slow ? " (slow to answer, doesn't speed up)" : " (speeds up a week after release)") + '.<br>Phone delay after release: ' + (x.h.delay ? "+" + x.h.delay + " s" : "none") + '.<br>Last 3 weeks: ' + fmt(x.last3, 1) + ' offers/wk (real: ' + fmt((x.h.real[7] + x.h.real[8] + x.h.real[9]) / 3, 1) + ').</div></div>';
+  }
+
+  buildControls();
+  syncControls();
+  run();
+})();
+</script>
