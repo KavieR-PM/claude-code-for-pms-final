@@ -1,0 +1,30 @@
+Console Night Mode — one-pager
+Product, Dispatch
+20 September 2026
+
+Problem
+
+Handlers who work overnight keep the console open next to other screens.
+Kip described it as "a wall of white light in the middle of my face" at
+11pm, and two of four handlers in Sofia's interviews said they lean in
+to read small text at night.
+
+Proposal
+
+A night theme for the console that the handler can switch on, with the
+same layout and a slightly larger default text size.
+
+Owner
+
+Sofia Marino designs it; Marcus Oyelaran's team builds it.
+
+Success measure
+
+At least 30% of handlers who use the console after 8pm switch it on
+within a month, and night-time "can't read the console" tickets fall to
+zero.
+
+Scope
+
+Console theme and text size only. No change to the phone app, no new
+layout, no per-screen custom colours.

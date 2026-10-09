@@ -1,0 +1,28 @@
+Offer History Screen — one-pager
+Product, Dispatch
+2 October 2026
+
+Problem
+
+When an offer times out it disappears from the responder's phone. About
+40% of callout tickets ask some version of "is my account broken?"
+because responders can't see what they were offered or missed.
+
+Proposal
+
+A "recent offers" screen on the responder app showing the last 30 days
+of offers and what happened to each one.
+
+Owner
+
+Wen Li's routing team, with Sofia on the screen design.
+
+Success measure
+
+"Is my account broken?" tickets fall by half. We don't yet have a clean
+weekly count of these tickets; Nadia will set one up before launch.
+
+Scope
+
+Read-only history for the responder. No editing, no handler view in this
+release.

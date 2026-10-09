@@ -1,0 +1,31 @@
+Supply Catalog Search — one-pager
+Product, Supply
+10 September 2026
+
+Problem
+
+Quartermasters and handlers can't find items unless they know the exact
+name. Halloran typed "plate" and got forty results, half unrelated, and
+had to scroll to find the vest plate he needed.
+
+Proposal
+
+Rebuild catalog search: category filters, synonyms ("plate" finds "vest
+plate"), results ranked by what people actually order, recently ordered
+items at the top, and search across all three sites' stock. This is a
+large piece of work, and all five parts ship together as one search
+experience.
+
+Owner
+
+Halloran's team, Supply, with Ravi Menon on ranking data.
+
+Success measure
+
+The share of searches that end in an order rises from 35% to 60%, and
+average time from search to order halves.
+
+Scope
+
+The five search parts above and nothing else. No changes to requisition
+approvals, no new catalog items, no mobile app work.

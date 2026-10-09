@@ -1,0 +1,17 @@
+{
+  "checks": ["owner", "measure", "scope", "problem_first"],
+  "cases": {
+    "c01-bulk-callout.txt":               {"owner": false, "measure": true,  "scope": true,  "problem_first": true,  "why": "Course answer key: 'nobody's picked it up yet'."},
+    "c02-handler-phone-app.txt":          {"owner": true,  "measure": true,  "scope": true,  "problem_first": false, "why": "Course answer key: opens with the app; Aunt Dot's problem comes second."},
+    "c03-requisition-approval-chains.txt":{"owner": true,  "measure": true,  "scope": false, "problem_first": true,  "why": "Course answer key: 'that's the whole ask', then four more features."},
+    "c04-routing-override-audit-log.txt": {"owner": true,  "measure": false, "scope": true,  "problem_first": true,  "why": "Course answer key: says what's logged, never how we'd know it works."},
+    "c05-perfect-night-mode.txt":         {"owner": true,  "measure": true,  "scope": true,  "problem_first": true,  "why": "Control: should pass everything (false-alarm check)."},
+    "c06-terrible-ai-dispatch.txt":       {"owner": false, "measure": false, "scope": false, "problem_first": false, "why": "Control: should fail everything."},
+    "c07-owner-exploring.txt":            {"owner": true,  "measure": true,  "scope": true,  "problem_first": true,  "why": "Rule: owner exploring but not staffed passes with a note."},
+    "c08-measure-no-baseline.txt":        {"owner": true,  "measure": true,  "scope": true,  "problem_first": true,  "why": "Rule: a measure without a baseline passes with a note."},
+    "c09-big-but-bounded.txt":            {"owner": true,  "measure": true,  "scope": true,  "problem_first": true,  "why": "Rule: large scope that stays the same size and names what's out passes."},
+    "c10-solution-sentence-first.txt":    {"owner": true,  "measure": true,  "scope": true,  "problem_first": false, "why": "Rule: opens with the solution, even if the problem follows in the next sentence."},
+    "c11-owner-tbd.txt":                  {"owner": false, "measure": true,  "scope": true,  "problem_first": true,  "why": "Rule: 'TBD, Marcus to assign' is not a named owner."},
+    "c12-vague-measure.txt":              {"owner": true,  "measure": false, "scope": true,  "problem_first": true,  "why": "Rule: a feeling ('happier', 'more personal') is not a measure."}
+  }
+}

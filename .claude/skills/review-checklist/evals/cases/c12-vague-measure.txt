@@ -1,0 +1,28 @@
+Responder Profile Photos — one-pager
+Product, Dispatch
+28 September 2026
+
+Problem
+
+Handlers covering for another handler sometimes don't recognise the
+responders on the roster at a glance, and have to open each profile to
+check capability tags.
+
+Proposal
+
+Let handlers add a symbol or emblem to each responder's profile card,
+shown on the roster. (No faces or photos, in line with Security Policy
+4.1.)
+
+Owner
+
+Sofia Marino, with Marcus Oyelaran's team building it.
+
+Success measure
+
+Handlers will be happier with the roster and it will feel more personal.
+
+Scope
+
+One emblem per responder card on the roster. No photos, no changes to
+the phone app.

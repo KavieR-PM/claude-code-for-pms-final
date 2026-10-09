@@ -1,6 +1,7 @@
 # Bringing quiet responders back: what we'd build
 
-**For:** Helen Achebe · **From:** Dispatch PM · **Date:** 5 Oct 2026 · **Status:** proposal, before anyone touches the code
+**For:** Helen Achebe · **From:** Dispatch PM · **Date:** 8 Oct 2026 · **Status:** proposal, before anyone touches the code
+**Owners:** Dispatch PM (product) · Wen Li with Marcus Oyelaran's team (engineering) · Sofia Marino (design)
 
 ## What's happening
 

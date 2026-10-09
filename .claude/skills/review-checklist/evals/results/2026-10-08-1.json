@@ -1,0 +1,17 @@
+{
+  "run_by": "Claude, same session that wrote the cases and answer key (not blind)",
+  "cases": {
+    "c01-bulk-callout.txt":                {"owner": false, "measure": true,  "scope": true,  "problem_first": true},
+    "c02-handler-phone-app.txt":           {"owner": true,  "measure": true,  "scope": true,  "problem_first": false},
+    "c03-requisition-approval-chains.txt": {"owner": true,  "measure": true,  "scope": false, "problem_first": true},
+    "c04-routing-override-audit-log.txt":  {"owner": true,  "measure": false, "scope": true,  "problem_first": true},
+    "c05-perfect-night-mode.txt":          {"owner": true,  "measure": true,  "scope": true,  "problem_first": true},
+    "c06-terrible-ai-dispatch.txt":        {"owner": false, "measure": false, "scope": false, "problem_first": false},
+    "c07-owner-exploring.txt":             {"owner": true,  "measure": true,  "scope": true,  "problem_first": true},
+    "c08-measure-no-baseline.txt":         {"owner": true,  "measure": true,  "scope": true,  "problem_first": true},
+    "c09-big-but-bounded.txt":             {"owner": true,  "measure": true,  "scope": true,  "problem_first": true},
+    "c10-solution-sentence-first.txt":     {"owner": true,  "measure": true,  "scope": true,  "problem_first": false},
+    "c11-owner-tbd.txt":                   {"owner": false, "measure": true,  "scope": true,  "problem_first": true},
+    "c12-vague-measure.txt":               {"owner": true,  "measure": false, "scope": true,  "problem_first": true}
+  }
+}

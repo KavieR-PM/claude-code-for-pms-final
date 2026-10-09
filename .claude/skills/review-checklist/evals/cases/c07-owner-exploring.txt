@@ -1,0 +1,28 @@
+Responder Availability Calendar — one-pager
+Product, Dispatch
+15 September 2026
+
+Problem
+
+Handlers set availability one day at a time. Aunt Dot said she re-enters
+Vesper's evenings every week because there's no way to repeat them.
+
+Proposal
+
+Let a handler set a repeating weekly availability pattern for a
+responder, with one-off exceptions.
+
+Owner
+
+Sofia Marino, exploring this in Q4 alongside the console redesign. Not
+yet staffed for a build.
+
+Success measure
+
+Handlers spend less time setting availability: the number of
+availability edits per responder per week falls by half.
+
+Scope
+
+Repeating weekly patterns and exceptions only. No shift swapping, no
+calendar sync with other tools.

@@ -1,0 +1,23 @@
+Handler Alert Sounds — one-pager
+Product, Dispatch
+25 September 2026
+
+We're adding a choice of alert sound per responder. Right now every
+responder's alert makes the same "bing", so a handler with two
+responders has to look at the screen to know whose callout it is. Kip
+said it trips him up at 2am.
+
+Owner
+
+Sofia Marino designs the sound set; Marcus Oyelaran's team builds it.
+
+Success measure
+
+Handlers with two or more responders report knowing whose callout it is
+without looking; measured by a two-question survey before and after,
+with a target of 80% saying yes.
+
+Scope
+
+A choice of five sounds per responder on the console. No custom sound
+uploads, no phone app changes.

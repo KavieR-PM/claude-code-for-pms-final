@@ -1,0 +1,19 @@
+AI Dispatch — one-pager
+Product
+1 October 2026
+
+Proposal
+
+We should use AI to dispatch callouts instead of the current ranking.
+The AI would pick the best responder automatically, write the callout
+message, predict which incidents are coming, plan gear maintenance in
+Supply, chat with handlers, and eventually run the whole console.
+
+Why
+
+Everyone is talking about AI and our competitors will have it soon.
+Responders sometimes miss callouts.
+
+Next steps
+
+Someone should look into this when there is time.

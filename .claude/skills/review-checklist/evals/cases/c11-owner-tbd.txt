@@ -1,0 +1,27 @@
+Capability Tag Legend — one-pager
+Product, Dispatch
+3 October 2026
+
+Problem
+
+The capability tag legend is hidden in a drawer off the responder detail
+panel. Ambrose said he opens it about once a fortnight and once had to
+look up a new tag twice before it stuck.
+
+Proposal
+
+Show a short tooltip with each tag's meaning wherever a tag appears in
+the console.
+
+Owner
+
+TBD — Marcus to assign once the profile redesign wraps.
+
+Success measure
+
+Clicks on the hidden legend drawer fall by 80% within a month.
+
+Scope
+
+Tooltips on existing tags only. No new tags, no changes to how tags are
+assigned.

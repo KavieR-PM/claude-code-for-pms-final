@@ -1,0 +1,291 @@
+<title>Rook Signal Deck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --night: #0d1b4c; --sky: #1f4fd8; --red: #e3262f; --yellow: #ffcc1f; --green: #13a862;
+    --ink: #0b0f1f; --paper: #ffffff; --paper-2: #eef3ff; --muted: #4d5778;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: #070d26; color: var(--paper); font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+  .bang { font-family: "Bangers", Impact, "Arial Black", sans-serif; letter-spacing: .04em; font-weight: 400; }
+  :focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
+
+  .viewport { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+  .stage { width: 1280px; height: 720px; position: absolute; left: 50%; top: 50%; transform-origin: center center; }
+  .slide { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; padding: 56px 72px; display: none; flex-direction: column; gap: 24px;
+    background-color: var(--paper); color: var(--ink); border: 4px solid var(--ink); box-shadow: 10px 10px 0 var(--red); }
+  .slide.on { display: flex; }
+  .slide.dark { background-color: var(--night); color: var(--paper); background-image: radial-gradient(rgba(255,255,255,.07) 1.4px, transparent 1.6px); background-size: 12px 12px; }
+  .slide h2 { font-family: "Bangers", Impact, sans-serif; font-weight: 400; letter-spacing: .04em; font-size: 60px; line-height: 1; margin: 0; }
+  .slide.dark h2 { color: var(--yellow); text-shadow: 3px 3px 0 var(--red), 6px 6px 0 var(--ink); }
+  .kicker { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--red); margin: 0; }
+  .slide.dark .kicker { color: #9fb4ff; }
+  .lead { font-size: 26px; line-height: 1.35; margin: 0; max-width: 60ch; }
+  .muted { color: var(--muted); }
+  .slide.dark .muted { color: #c9d4ff; }
+  .src { position: absolute; left: 72px; bottom: 24px; font-size: 14px; color: var(--muted); }
+  .slide.dark .src { color: #9fb4ff; }
+  .num { position: absolute; right: 28px; bottom: 20px; font-size: 14px; font-weight: 700; color: var(--muted); }
+  .slide.dark .num { color: #9fb4ff; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; align-items: start; }
+  .card { background: var(--paper-2); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 5px 5px 0 var(--ink); padding: 20px 22px; display: grid; gap: 8px; }
+  .card h3 { margin: 0; font-family: "Bangers", Impact, sans-serif; font-weight: 400; letter-spacing: .04em; font-size: 30px; }
+  .card p { margin: 0; font-size: 20px; line-height: 1.35; }
+  .card.y { background: var(--yellow); } .card.r { background: var(--red); color: var(--paper); } .card.g { background: var(--green); color: var(--paper); } .card.b { background: var(--sky); color: var(--paper); }
+  .big { font-family: "Bangers", Impact, sans-serif; font-size: 220px; line-height: .85; color: var(--yellow); text-shadow: 6px 6px 0 var(--red), 12px 12px 0 var(--ink); }
+  .bars { display: flex; align-items: flex-end; gap: 14px; height: 300px; }
+  .bars div { flex: 1; display: grid; justify-items: center; gap: 6px; font-weight: 700; font-size: 18px; }
+  .bars i { display: block; width: 100%; border: 3px solid var(--ink); border-bottom: 0; border-radius: 8px 8px 0 0; background: var(--sky); }
+  .bars i.hot { background: var(--red); }
+  .bars span { font-size: 15px; color: var(--muted); font-weight: 700; }
+  .slide.dark .bars span { color: #c9d4ff; }
+  .flow { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: stretch; gap: 0; flex: 1; }
+  .arrow { display: grid; place-items: center; font-family: "Bangers", Impact, sans-serif; font-size: 60px; color: var(--red); }
+  .quote { font-size: 34px; line-height: 1.3; font-weight: 700; border-left: 0; margin: 0; }
+  .quote cite { display: block; font-size: 20px; font-style: normal; font-weight: 400; margin-top: 10px; color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; font-size: 22px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 3px solid var(--paper-2); vertical-align: top; }
+  th { font-size: 16px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border-bottom-color: var(--ink); }
+  .pill { display: inline-block; padding: 2px 12px; border-radius: 999px; border: 2px solid var(--ink); font-weight: 700; font-size: 17px; }
+  .pill.h { background: var(--green); color: var(--paper); } .pill.m { background: var(--yellow); } .pill.l { background: var(--red); color: var(--paper); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; flex: 1; align-content: start; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; flex: 1; align-content: start; }
+  .ico { width: 54px; height: 54px; border-radius: 14px; border: 3px solid var(--ink); display: grid; place-items: center; font-size: 28px; background: var(--paper); }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .step { border: 3px solid var(--ink); border-radius: 14px; padding: 14px; background: var(--paper-2); display: grid; gap: 6px; box-shadow: 4px 4px 0 var(--ink); }
+  .step b { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 26px; color: var(--red); letter-spacing: .04em; }
+  .step span { font-size: 18px; line-height: 1.3; }
+  .phone { width: 300px; background: var(--ink); border-radius: 32px; padding: 10px; flex: none; }
+  .sig { background: var(--red); color: var(--paper); border-radius: 22px; padding: 18px; display: grid; gap: 8px; border: 3px solid var(--ink); }
+  .sig .t { font-family: "Bangers", Impact, sans-serif; font-size: 28px; color: var(--yellow); }
+  .sig .w { font-family: "Bangers", Impact, sans-serif; font-size: 30px; line-height: 1; }
+  .sig .d { font-family: "Bangers", Impact, sans-serif; font-size: 64px; line-height: .9; color: var(--yellow); }
+  .sig .tm { font-size: 15px; font-weight: 700; background: rgba(0,0,0,.25); border-radius: 8px; padding: 6px 8px; }
+  .sig .take { justify-self: center; width: 120px; height: 120px; border-radius: 50%; background: var(--paper); color: var(--ink); border: 8px solid var(--yellow); display: grid; place-items: center; font-family: "Bangers", Impact, sans-serif; font-size: 28px; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; background: #0b112e; border-top: 3px solid var(--ink); flex-wrap: wrap; }
+  .bar button { font: inherit; font-weight: 700; border: 3px solid var(--ink); background: var(--yellow); color: var(--ink); border-radius: 10px; padding: 6px 14px; cursor: pointer; }
+  .bar button[aria-pressed="true"] { background: var(--red); color: var(--paper); }
+  .bar .count { color: #c9d4ff; font-weight: 700; }
+  .notes { background: #fff8d6; color: var(--ink); padding: 14px 20px; font-size: 17px; line-height: 1.5; max-height: 30vh; overflow: auto; border-top: 3px solid var(--ink); }
+  .notes b { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--red); margin-bottom: 4px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="viewport" id="viewport">
+  <div class="stage" id="stage">
+
+    <section class="slide dark" data-notes="This is a decision meeting. In about fifteen minutes I want to show you what 4.2 actually did to responders, why it happened, and what I think we should build, so you can make three calls at the end. Everything here comes from the callout history, 25 support tickets, Sofia's four handler interviews and the routing code. One caveat up front: the callout file hasn't been verified by Ravi yet, so treat the exact numbers as strong signals, not final figures.">
+      <p class="kicker">Rook Dispatch · for Helen Achebe · 8 Oct 2026</p>
+      <h2 style="font-size:96px">Bringing quiet<br>responders back</h2>
+      <p class="lead muted">What 4.2 did, why, and the fix we'd build: Rook Signal.</p>
+      <p class="src">Owners: Dispatch PM · Wen Li &amp; Marcus Oyelaran's team · Sofia Marino</p>
+    </section>
+
+    <section class="slide dark" data-notes="If you remember one thing, it's this. Four of our sixteen responders went from about twelve offers a week each to almost none. Combined, they went from 49 offers a week to 3, and not one of them has come back. These weren't weak responders; before the release they accepted 69 to 87 percent of their offers, and Vesper was one of the best in the file. The bars show the four combined, week by week. The drop starts the week 4.2 shipped and never recovers.">
+      <p class="kicker">The one number</p>
+      <div class="cols" style="grid-template-columns: 1.1fr 1fr; align-items:center">
+        <div><div class="big">4 of 16</div><p class="lead" style="margin-top:28px">responders went from ~12 offers a week to <b>0–1</b>. Combined: <b>49 → 3</b>. None has recovered.</p></div>
+        <div class="bars" aria-label="The four combined offers per week: 49 before, 43, 16, 6, 3">
+          <div><i style="height:270px"></i>49<span>before</span></div><div><i style="height:237px"></i>43<span>10 Aug</span></div><div><i class="hot" style="height:88px"></i>16<span>17 Aug</span></div><div><i class="hot" style="height:33px"></i>6<span>24 Aug</span></div><div><i class="hot" style="height:17px"></i>3<span>31 Aug</span></div>
+        </div>
+      </div>
+      <p class="src">Source: callout history CSV, Farlight, Meteor Mite, The Undertow, Vesper (not yet verified by Ravi)</p>
+    </section>
+
+    <section class="slide" data-notes="Here's what that looks like for one person. Vesper took eight of every ten jobs all summer. His handler, Aunt Dot, told Sofia that his phone often buzzes downstairs while he's upstairs. With 90 seconds he made it. With 60 he didn't. He missed six jobs in the release week, each miss moved him down the line, and fewer offers came. By the end of August he was getting one offer a week, and nothing told him why. Dot only noticed because she was cooking for someone who was home all week.">
+      <p class="kicker">One responder's August</p>
+      <h2>Vesper: 14 offers a week → 1</h2>
+      <div class="cols">
+        <div class="bars" style="height:280px" aria-label="Vesper offers per week">
+          <div><i style="height:224px"></i>14</div><div><i style="height:208px"></i>13</div><div><i style="height:240px"></i>15</div><div><i style="height:224px"></i>14</div><div><i style="height:208px"></i>13</div><div><i style="height:224px"></i>14</div><div><i class="hot" style="height:192px"></i>12</div><div><i class="hot" style="height:80px"></i>5</div><div><i class="hot" style="height:32px"></i>2</div><div><i class="hot" style="height:16px"></i>1</div>
+        </div>
+        <blockquote class="quote">"By the time he's actually got a thumb on the screen — it's gone. Gone to somebody else already."<cite>Aunt Dot, Vesper's handler</cite></blockquote>
+      </div>
+      <p class="src">Weeks of 29 Jun – 31 Aug; 4.2 shipped Wed 12 Aug. Source: callout history CSV; Sofia's interview, 3 Sep</p>
+    </section>
+
+    <section class="slide" data-notes="Three things combined. First, the shorter timer made everyone miss more in the release week: acceptance fell from 78 to 54 percent. Second, the scoring rules. A missed offer counts exactly like a no, a miss costs more than a yes earns, so you need six out of ten just to stand still, and nothing ever restores points. Third, offers go down the line one at a time, so if you're at the back you're only asked when everyone ahead says no. Together, the people who missed the most fell to the back and could never earn their way out.">
+      <p class="kicker">How it happened</p>
+      <h2>A bad week, then a trap with no exit</h2>
+      <div class="flow">
+        <div class="card r"><h3>1. Shorter timer</h3><p>4.2 cut the answer window from 90 to 60 seconds. Everyone missed more: acceptance fell from 78% to 54%.</p></div>
+        <div class="arrow">→</div>
+        <div class="card y"><h3>2. The points trap</h3><p>A miss counts like a "no". It costs 0.12; a yes earns 0.08. Points never come back on their own.</p></div>
+        <div class="arrow">→</div>
+        <div class="card b"><h3>3. Back of the line</h3><p>Offers go one at a time. At the back, you're only asked when everyone ahead says no, so there's no way back up.</p></div>
+      </div>
+      <p class="src">Source: dispatch-routing code (offer.py:30, history.py, config.py); callout history CSV</p>
+    </section>
+
+    <section class="slide" data-notes="Priya's handover said this was August being quiet. The data doesn't support that for the collapse. The first week of August was the best week of the summer, and the drop came all at once in the release week. A quiet month would hit everyone; instead twelve responders got more work and four got none. The clearest proof is Kip's two responders: same handler, same city, same weeks. Meteor Mite went from eleven offers to one while The Gale went from thirteen to twenty-one. August might explain a small slice of the lower volume afterwards, at most around thirty percent, but none of the collapse.">
+      <p class="kicker">Was it just August?</p>
+      <h2>No: same city, opposite fates</h2>
+      <div class="grid3">
+        <div class="card"><h3>No early dip</h3><p>Week of 3 Aug was the summer's best (78%). The drop came all at once, in the release week.</p></div>
+        <div class="card"><h3>Not everyone</h3><p>12 responders got <b>more</b> work. 4 got almost none. A quiet month doesn't pick four people.</p></div>
+        <div class="card y"><h3>Kip's two</h3><p>Same handler, same city: Meteor Mite <b>11 → 1</b>, The Gale <b>13 → 21</b>.</p></div>
+      </div>
+      <p class="lead muted" style="font-size:22px">August explains 0% of the collapse, and at most ~30% of the lower volume after it.</p>
+      <p class="src">Source: callout history CSV; four-analyst root-cause review</p>
+    </section>
+
+    <section class="slide" data-notes="So why didn't anyone see this? Three reasons. Our headline metric hid it: acceptance rate looks like it recovered to 73 percent, but partly because the stuck responders stopped being offered anything, so their misses dropped out of the maths. Callouts actually filled are still about nine percent down. Second, a missed offer just disappears from the phone, so about forty percent of tickets are really asking 'is my account broken?' Third, two of the four stuck responders never filed a ticket at all; we only found them in Sofia's design interviews.">
+      <p class="kicker">Why nobody saw it</p>
+      <h2>The dashboard said "recovered"</h2>
+      <div class="grid3">
+        <div class="card b"><h3>73% "recovered"</h3><p>Acceptance looks almost normal, because the stuck four stopped being asked. Callouts filled are still <b>9% down</b>.</p></div>
+        <div class="card y"><h3>40% of tickets</h3><p>ask "is my account broken?" Missed offers vanish from the phone with no trace.</p></div>
+        <div class="card r"><h3>2 of 4 silent</h3><p>Mite and Vesper never filed a ticket. They surfaced only in design interviews.</p></div>
+      </div>
+      <p class="src">Source: callout history CSV; 25 support tickets; Sofia's handler interviews</p>
+    </section>
+
+    <section class="slide" data-notes="Four analysts looked at this from different angles and debated it. They agree with high confidence that the scoring rules are the lock-in and must be fixed. They agree with medium confidence that the shorter timer was the trigger. What they could not settle is why those four specifically kept missing afterwards. It's either that the timer is too short for how they answer, that their phones weren't getting offers in time, or that they chose not to. The fix I'm proposing works for all three, and the new logging will tell us which it is.">
+      <p class="kicker">Root cause, and how sure we are</p>
+      <h2>What we know, and what's still open</h2>
+      <table>
+        <thead><tr><th>Finding</th><th>Confidence</th></tr></thead>
+        <tbody>
+          <tr><td>The scoring rules lock out anyone who keeps missing</td><td><span class="pill h">High</span></td></tr>
+          <tr><td>The 60-second timer triggered the bad week</td><td><span class="pill m">Medium</span></td></tr>
+          <tr><td>The closeness reweight moved work between others; it didn't cause the collapse</td><td><span class="pill m">Medium</span></td></tr>
+          <tr><td><b>Open:</b> why those four kept missing (timer too short, phones late, or choice)</td><td><span class="pill l">Low</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">Source: four-analyst root-cause debate; hypotheses #1–#11 in the analysis file</p>
+    </section>
+
+    <section class="slide" data-notes="Here's what we'd build, from the point of view of the people it happens to. A missed offer stops counting against you; a real no still does, which keeps Wen's original intent. Every offer says what, where and how far, with leave-by and arrive-by times. A fifteen-second grace window gives near misses a fair chance without slowing dispatch. Every miss comes back with context and a one-tap reason, which is also how we'll learn whether it's the timer or the phones. Responders can say 'I'm free now, put me first', with limits. And handlers see who's quiet or overloaded, and can act.">
+      <p class="kicker">What we'd build</p>
+      <h2>Rook Signal: six changes</h2>
+      <div class="grid3">
+        <div class="card"><div class="ico">⚖️</div><h3>Missing isn't "no"</h3><p>Misses cost nothing; a "no" still counts. The four get a fresh start.</p></div>
+        <div class="card"><div class="ico">📍</div><h3>Where and how far</h3><p>Drive time first, leave-by and arrive-by, map, skills, a giant Take It button.</p></div>
+        <div class="card"><div class="ico">⏱️</div><h3>15-second grace</h3><p>"Still lit!" First tap wins. Dispatch doesn't slow down.</p></div>
+        <div class="card"><div class="ico">📡</div><h3>Signal missed</h3><p>Context plus a one-tap reason, which tells us timer vs phone.</p></div>
+        <div class="card"><div class="ico">🙋</div><h3>Put me first</h3><p>"I'm free now." Once every 4 hours, 15-minute drive.</p></div>
+        <div class="card"><div class="ico">🛰️</div><h3>Handler HQ</h3><p>Gone quiet and overloaded flags, with reasons and actions.</p></div>
+      </div>
+    </section>
+
+    <section class="slide dark" data-notes="This is the clickable prototype; I'll switch to it live. On the left is what Vesper sees when a signal arrives: urgency, the incident, a nine-minute drive in big type, leave by and arrive by, and a huge Take It button you can hit with gloves on. If the sixty seconds run out, the card turns yellow and says 'still lit' for fifteen seconds. The look is an exploratory direction; Sofia will map it to our real design system. The people in it are real cases from the data and interviews; individual offer times are illustrative.">
+      <p class="kicker">The prototype</p>
+      <h2>Click through it: prototype.html</h2>
+      <div class="cols" style="grid-template-columns: 300px 1fr; gap:56px; align-items:center">
+        <div class="phone"><div class="sig"><span class="t">Signal!</span><span class="w">Building collapse</span><span class="d">9 min drive</span><span>4.1 km · Harbor district</span><span class="tm">Leave by 21:24 · arrive 21:33</span><span class="take">Take it</span></div></div>
+        <div class="grid2">
+          <div class="card y"><h3>Still lit!</h3><p>15 more seconds after time runs out. First tap wins.</p></div>
+          <div class="card g"><h3>It's yours!</h3><p>Instant result, with when to leave.</p></div>
+          <div class="card"><h3>Signal missed</h3><p>One tap: what happened? Never changes your offers.</p></div>
+          <div class="card b"><h3>Handler HQ</h3><p>Mite "Gone quiet", The Gale "Overloaded 1.6×".</p></div>
+        </div>
+      </div>
+      <p class="src">Weekly numbers from the callout history; offer details illustrative. Visual style is exploratory.</p>
+    </section>
+
+    <section class="slide" data-notes="These are the three calls I need from you. First, a missed offer should cost nothing, while a real no still counts. If filling a callout slows by more than ten seconds, we revisit. Second, reset the four stuck responders now rather than waiting for more data; they've lost work every week since the twelfth of August. We'd ask Dot and Kip to confirm their phones work first. Third, keep 'put me first' tight: fifteen-minute drive, matching skills, thirty minutes, once every four hours. That protects urgent callouts.">
+      <p class="kicker">Decisions</p>
+      <h2>Three calls I need from you</h2>
+      <table>
+        <thead><tr><th>Decision</th><th>My recommendation</th></tr></thead>
+        <tbody>
+          <tr><td>What a missed offer costs</td><td><b>Nothing</b>; a "no" still counts. Revisit if filling slows by 10+ s.</td></tr>
+          <tr><td>Reset the four now, or wait for data</td><td><b>Now</b>, once Dot and Kip confirm the phones work.</td></tr>
+          <tr><td>"Put me first" limits</td><td><b>Tight</b>: 15-min drive, matching skills, 30 min, once every 4 hours.</td></tr>
+        </tbody>
+      </table>
+      <p class="lead muted" style="font-size:22px">Also: room in the next release, Sofia's time, a yes to writing "how routing decides", and 10 minutes on Availability Confidence.</p>
+    </section>
+
+    <section class="slide" data-notes="Here's how we'll know it worked. The four are back to at least half their usual offers within three weeks. Callouts filled per week return to about 132, and we report that next to acceptance rate from now on, because acceptance rate alone hid this. 'Is my account broken' tickets fall by half. And two guardrails: filling a callout shouldn't get more than ten seconds slower, and first-in-line offers should be accepted at close to the normal rate.">
+      <p class="kicker">Success</p>
+      <h2>How we'll know it worked</h2>
+      <div class="grid2">
+        <div class="card g"><h3>4 of 4 back</h3><p>Stuck responders at ≥50% of their usual offers within 3 weeks.</p></div>
+        <div class="card b"><h3>~132 filled / week</h3><p>Callouts filled back to normal (now ~120), reported next to acceptance rate.</p></div>
+        <div class="card y"><h3>Half the tickets</h3><p>"Is my account broken?" tickets fall by half.</p></div>
+        <div class="card"><h3>Guardrails</h3><p>Filling a callout slows by ≤10 s. First-in-line accept rate stays near normal.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="We'd ship in five phases, each behind an on/off switch and piloted in Kip's city first, with Wen owning a two-week watch after each. Logging comes first because it's invisible, small, and settles the timer-versus-phone question. Then the scoring fix and the reset, which stops the harm. One risk to check before anything ships: scores are held in memory in the code we reviewed. If installing a release resets everyone to the middle, the fix itself could restart the spiral. Wen confirms that before we ship.">
+      <p class="kicker">Rollout</p>
+      <h2>Five phases, one risk to check first</h2>
+      <div class="steps">
+        <div class="step"><b>1 · Logging</b><span>Every offer: sent, delivered, seen, answered, reason.</span></div>
+        <div class="step"><b>2 · Fair scoring</b><span>Misses cost nothing; reset the four.</span></div>
+        <div class="step"><b>3 · The signal</b><span>Context, leave-by, grace window.</span></div>
+        <div class="step"><b>4 · Missed + controls</b><span>Reasons, mission log, put me first.</span></div>
+        <div class="step"><b>5 · Handler HQ</b><span>Flags, reasons, actions, alerts.</span></div>
+      </div>
+      <div class="card r"><h3>Check first</h3><p>If installing a release resets every score to the middle, the fix could restart the spiral. Wen confirms before we ship.</p></div>
+      <p class="src">Each phase behind an on/off switch, piloted in Kip's city, with a two-week watch owned by Wen.</p>
+    </section>
+
+    <section class="slide dark" data-notes="To close: I'm asking for the three decisions, room in the next release for logging and the scoring fix, and Sofia's time. In parallel, I'm sending Wen one combined data request, the offer log, real scores and the push-notification change, and asking Ravi to confirm what the callout file measures and to send September's numbers. The detail is all in the one-pager, the PRD and the engineering handoff. Happy to take questions.">
+      <p class="kicker">Next steps</p>
+      <h2>What happens next</h2>
+      <div class="grid3">
+        <div class="card y"><h3>Today</h3><p>Your three decisions, release room, Sofia's time.</p></div>
+        <div class="card"><h3>This week</h3><p>Wen: offer log, real scores, the push change. Ravi: CSV definitions, September data.</p></div>
+        <div class="card g"><h3>Next release</h3><p>Phase 1 logging and phase 2 fair scoring, piloted in Kip's city.</p></div>
+      </div>
+      <p class="src">Detail: brief.md (one-pager) · prd.md · engineering-handoff.md · prototype.html</p>
+    </section>
+
+  </div>
+</div>
+
+<div class="bar">
+  <div style="display:flex; gap:8px">
+    <button id="prev" aria-label="Previous slide">← Prev</button>
+    <button id="next" aria-label="Next slide">Next →</button>
+  </div>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button id="notes-btn" aria-pressed="false">Speaker notes (N)</button>
+</div>
+<div class="notes" id="notes" hidden><b>Speaker notes</b><span id="notes-text"></span></div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let i = 0;
+  slides.forEach((s, n) => { const tag = document.createElement("span"); tag.className = "num"; tag.textContent = (n + 1) + " / " + slides.length; s.appendChild(tag); });
+  function fit() {
+    const vp = document.getElementById("viewport");
+    const scale = Math.min((vp.clientWidth - 32) / 1290, (vp.clientHeight - 24) / 730, 1.4);
+    document.getElementById("stage").style.transform = "translate(-50%, -50%) scale(" + Math.max(scale, 0.2) + ")";
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle("on", k === i));
+    document.getElementById("count").textContent = "Slide " + (i + 1) + " of " + slides.length;
+    document.getElementById("notes-text").textContent = slides[i].dataset.notes || "";
+    try { history.replaceState(null, "", "#s" + (i + 1)); } catch (e) {}
+  }
+  function toggleNotes() {
+    const n = document.getElementById("notes"); n.hidden = !n.hidden;
+    document.getElementById("notes-btn").setAttribute("aria-pressed", String(!n.hidden));
+    fit();
+  }
+  document.getElementById("prev").addEventListener("click", () => show(i - 1));
+  document.getElementById("next").addEventListener("click", () => show(i + 1));
+  document.getElementById("notes-btn").addEventListener("click", toggleNotes);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "n" || e.key === "N") toggleNotes();
+  });
+  window.addEventListener("resize", fit);
+  const m = /#s(\d+)/.exec(location.hash);
+  show(m ? +m[1] - 1 : 0);
+  fit();
+})();
+</script>
