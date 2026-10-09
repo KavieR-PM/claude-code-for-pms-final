@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Quiet Heroes Report</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* One deliberate world: a cozy small-town pixel RPG on an autumn evening. */
+  :root {
+    color-scheme: dark;
+    --sky: #1d2340;
+    --dusk: #3b2f5c;
+    --maple: #b8332f;
+    --pumpkin: #e57c2c;
+    --mustard: #f0c04a;
+    --pine: #2e5a3c;
+    --moss: #6f9a4e;
+    --coffee: #4a2e1f;
+    --parchment: #f7ecd5;
+    --parch-2: #efdcb6;
+    --ink: #1b1410;
+    --snow: #fffaf0;
+    --muted: #6b5848;
+    --px: 4px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; }
+  body {
+    background: var(--sky);
+    background-image:
+      radial-gradient(rgba(255,250,240,.6) 1px, transparent 1.5px),
+      radial-gradient(rgba(255,250,240,.35) 1px, transparent 1.5px);
+    background-size: 120px 120px, 70px 70px;
+    background-position: 0 0, 35px 50px;
+    color: var(--snow);
+    font: 18px/1.55 "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  }
+  .pixel { font-family: "Press Start 2P", "Courier New", monospace; letter-spacing: 0; line-height: 1.5; }
+  .term { font-family: "VT323", "Courier New", monospace; }
+  a { color: var(--mustard); }
+  :focus-visible { outline: 4px solid var(--mustard); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  /* ---------- HUD ---------- */
+  .hud {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: var(--ink); border-bottom: var(--px) solid var(--coffee);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px;
+    padding: 10px 16px; font-size: 10px;
+  }
+  .hud .who { color: var(--mustard); }
+  .xp { flex: 1; min-width: 160px; display: flex; align-items: center; gap: 8px; color: var(--parch-2); }
+  .xp-bar { flex: 1; height: 14px; border: 3px solid var(--parchment); background: #2a1d14; position: relative; }
+  .xp-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: repeating-linear-gradient(90deg, var(--pumpkin) 0 10px, var(--mustard) 10px 20px); }
+  .hud nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .hud nav a { text-decoration: none; color: var(--ink); background: var(--parchment); border: 3px solid var(--coffee); padding: 4px 7px; font-size: 9px; }
+  .hud nav a:hover { background: var(--mustard); }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding-inline: 16px; }
+  section { padding-block: 72px; }
+
+  /* ---------- title screen ---------- */
+  .title-screen { padding-block: 40px 24px; text-align: center; }
+  .scene { width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto; border: 6px solid var(--ink); box-shadow: 8px 8px 0 var(--coffee); image-rendering: pixelated; background: #2b2650; }
+  .title-screen h1 { font-size: clamp(18px, 4.2vw, 38px); color: var(--mustard); text-shadow: 4px 4px 0 var(--maple), 8px 8px 0 var(--ink); margin: 34px 0 12px; }
+  .title-screen .sub { font-size: clamp(9px, 1.6vw, 12px); color: var(--parch-2); margin: 0 0 26px; }
+  .start { display: inline-block; text-decoration: none; background: var(--maple); color: var(--snow); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 14px 22px; font-size: 13px; animation: blink 1.2s steps(2) infinite; }
+  @keyframes blink { 50% { filter: brightness(1.35); } }
+  .leaf { position: absolute; width: 10px; height: 10px; background: var(--pumpkin); box-shadow: 4px 4px 0 var(--maple); animation: fall linear infinite; top: -20px; }
+  @keyframes fall { to { transform: translate(60px, 520px) rotate(360deg); } }
+  .scene-wrap { position: relative; overflow: hidden; max-width: 900px; margin: 0 auto; }
+
+  /* ---------- shared boxes ---------- */
+  .chapter { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; flex-wrap: wrap; }
+  .chapter .tag { background: var(--mustard); color: var(--ink); border: 4px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: 8px 10px; font-size: 11px; }
+  .chapter h2 { margin: 0; font-size: clamp(14px, 2.6vw, 22px); color: var(--parchment); text-shadow: 3px 3px 0 var(--ink); }
+  .dialog { background: var(--parchment); color: var(--ink); border: 6px solid var(--ink); box-shadow: inset 0 0 0 4px var(--coffee), 8px 8px 0 rgba(0,0,0,.45); padding: 26px 28px 30px; position: relative; }
+  .dialog .speaker { position: absolute; top: -20px; left: 22px; background: var(--maple); color: var(--snow); border: 4px solid var(--ink); padding: 6px 10px; font-size: 10px; }
+  .dialog p { margin: 0 0 12px; font-size: 20px; max-width: 70ch; }
+  .dialog p:last-of-type { margin-bottom: 0; }
+  .dialog .next { position: absolute; right: 18px; bottom: 10px; font-size: 12px; animation: blink 1s steps(2) infinite; color: var(--maple); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 28px; }
+  .stat { background: var(--coffee); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 16px; display: grid; gap: 6px; }
+  .stat b { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(18px, 3vw, 26px); color: var(--mustard); }
+  .stat span { color: var(--parch-2); font-size: 16px; }
+
+  /* ---------- level map ---------- */
+  .map { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .tile { text-decoration: none; color: var(--ink); background: var(--parchment); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--coffee); padding: 14px 12px; display: grid; gap: 8px; }
+  .tile:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--coffee); }
+  .tile .lv { font-size: 10px; color: var(--maple); }
+  .tile .nm { font-size: 11px; }
+  .tile .ic { font-size: 30px; line-height: 1; }
+  .tile small { color: var(--muted); font-size: 14px; }
+
+  /* ---------- level cards ---------- */
+  .level { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  @media (max-width: 820px) { .level { grid-template-columns: 1fr; } }
+  .scroll { background: var(--parchment); color: var(--ink); border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); padding: 18px 20px; display: grid; gap: 10px; }
+  .scroll .lbl { font-size: 10px; color: var(--maple); }
+  .scroll blockquote { margin: 0; font-family: "VT323", monospace; font-size: 26px; line-height: 1.15; background: var(--parch-2); border: 3px dashed var(--coffee); padding: 12px 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .scroll .meta { font-size: 14px; color: var(--muted); }
+  .loot { background: var(--pine); color: var(--snow); border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); padding: 18px 20px; display: grid; gap: 12px; }
+  .loot .lbl { font-size: 10px; color: var(--mustard); }
+  .loot h3 { margin: 0; font-size: 22px; line-height: 1.3; }
+  .loot p { margin: 0; font-size: 17px; color: #e7f0de; }
+  .loot code { font-family: "VT323", monospace; font-size: 20px; background: rgba(0,0,0,.3); padding: 0 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 9px; padding: 6px 8px; border: 3px solid var(--ink); background: var(--mustard); color: var(--ink); }
+  .chip.red { background: var(--maple); color: var(--snow); }
+  .chip.paper { background: var(--parchment); }
+
+  /* pixel bar charts */
+  .bars { display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 8px; background: rgba(0,0,0,.25); border: 3px solid var(--ink); }
+  .bars div { flex: 1; display: grid; justify-items: center; align-content: end; gap: 4px; height: 100%; }
+  .bars i { display: block; width: 100%; background: var(--mustard); border: 3px solid var(--ink); box-shadow: inset -4px 0 0 rgba(0,0,0,.2); }
+  .bars i.hot { background: var(--maple); }
+  .bars b { font-family: "VT323", monospace; font-weight: 400; font-size: 22px; line-height: 1; }
+  .bars small { font-family: "VT323", monospace; font-size: 16px; color: var(--parch-2); }
+
+  .hp { display: grid; gap: 10px; }
+  .hp-row { display: grid; grid-template-columns: 110px 1fr 70px; gap: 10px; align-items: center; font-size: 16px; }
+  .hp-row .nm { font-weight: 700; }
+  .hp-track { height: 20px; border: 3px solid var(--ink); background: #2a1d14; position: relative; }
+  .hp-track i { position: absolute; inset: 0 auto 0 0; background: var(--moss); }
+  .hp-track i.low { background: var(--maple); }
+  .hp-track i.over { background: var(--pumpkin); }
+  .hp-row .num { font-family: "VT323", monospace; font-size: 22px; }
+
+  .coins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .coin { border: 4px solid var(--ink); padding: 14px; display: grid; gap: 4px; justify-items: center; text-align: center; }
+  .coin b { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: 20px; }
+  .coin.plus { background: var(--mustard); color: var(--ink); }
+  .coin.minus { background: var(--maple); color: var(--snow); }
+  .coin span { font-size: 15px; }
+
+  /* mini phone */
+  .phone { width: 260px; max-width: 100%; background: var(--ink); border-radius: 26px; padding: 10px; margin: 0 auto; box-shadow: 6px 6px 0 var(--coffee); }
+  .screen { background: #1f4fd8; border-radius: 18px; padding: 12px; display: grid; gap: 10px; }
+  .sig { background: #e3262f; color: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 10px; display: grid; gap: 4px; }
+  .sig .t { font-family: "Press Start 2P", monospace; font-size: 10px; color: #ffcc1f; }
+  .sig .w { font-weight: 700; font-size: 16px; }
+  .sig .d { font-family: "Press Start 2P", monospace; font-size: 18px; color: #ffcc1f; }
+  .sig .tm { font-size: 12px; font-weight: 700; background: rgba(0,0,0,.25); border-radius: 6px; padding: 3px 6px; }
+  .miss { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .miss .h { background: var(--ink); color: #ffcc1f; font-family: "Press Start 2P", monospace; font-size: 9px; padding: 6px 8px; }
+  .miss .b { padding: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .miss .b span { font-size: 11px; font-weight: 700; border: 2px solid var(--ink); border-radius: 999px; padding: 2px 6px; }
+
+  /* ---------- boss ---------- */
+  .boss { display: grid; grid-template-columns: 260px 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 760px) { .boss { grid-template-columns: 1fr; } }
+  .boss-card { background: var(--dusk); border: 6px solid var(--ink); box-shadow: 8px 8px 0 var(--maple); padding: 16px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+  .boss-card svg { width: 160px; height: 160px; }
+  .boss-card .nm { font-size: 13px; color: var(--mustard); }
+  .boss-stats { width: 100%; display: grid; gap: 6px; text-align: left; font-family: "VT323", monospace; font-size: 22px; }
+  .boss-stats div { display: flex; justify-content: space-between; border-bottom: 2px dashed rgba(255,255,255,.25); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--parchment); color: var(--ink); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 14px; display: grid; gap: 8px; }
+  .step .n { font-size: 10px; color: var(--maple); }
+  .step p { margin: 0; font-size: 17px; }
+
+  /* ---------- inventory ---------- */
+  .inv { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+  .item { background: var(--coffee); border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 14px; display: grid; gap: 8px; align-content: start; }
+  .item .ic { width: 48px; height: 48px; display: grid; place-items: center; font-size: 26px; background: var(--parchment); border: 3px solid var(--ink); }
+  .item .nm { font-size: 10px; color: var(--mustard); }
+  .item p { margin: 0; font-size: 16px; color: var(--parch-2); }
+  .fix-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; margin-top: 24px; }
+  @media (max-width: 760px) { .fix-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- companions ---------- */
+  .party { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .member { background: var(--parchment); color: var(--ink); border: 6px solid var(--ink); box-shadow: 8px 8px 0 var(--pine); padding: 18px; display: grid; gap: 12px; align-content: start; }
+  .member .nm { font-size: 12px; color: var(--pine); }
+  .member ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 17px; }
+  .member .meter { display: grid; gap: 4px; font-size: 15px; }
+  .member .meter .hp-track i { background: var(--pine); }
+  .quest-log { margin-top: 22px; }
+  .quest-log ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+  .quest-log li { background: var(--coffee); border: 3px solid var(--ink); padding: 10px; font-size: 15px; color: var(--parch-2); }
+  .quest-log li b { display: block; font-family: "Press Start 2P", monospace; font-weight: 400; font-size: 9px; color: var(--mustard); margin-bottom: 4px; }
+
+  /* ---------- ending ---------- */
+  .ach { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .ach div { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; background: var(--ink); border: 4px solid var(--mustard); padding: 10px 12px; font-size: 16px; }
+  .ach span:first-child { font-size: 26px; }
+  .credits { text-align: center; color: var(--parch-2); font-size: 15px; display: grid; gap: 8px; padding-top: 40px; }
+  .credits .pixel { font-size: 11px; color: var(--mustard); }
+  .caveat { background: rgba(0,0,0,.3); border: 3px dashed var(--parch-2); padding: 12px 14px; font-size: 15px; color: var(--parch-2); margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<header class="hud" role="banner">
+  <span class="pixel who">SAVE FILE: NEW PM · ROOK DISPATCH</span>
+  <div class="xp pixel" aria-hidden="true">XP <div class="xp-bar"><span class="xp-fill" id="xp"></span></div></div>
+  <nav class="pixel" aria-label="Chapters">
+    <a href="#what">STORY</a><a href="#map">LEVELS</a><a href="#boss">BOSS</a><a href="#fix">FIX</a><a href="#party">PARTY</a><a href="#end">END</a>
+  </nav>
+</header>
+
+<main>
+  <!-- ================= TITLE ================= -->
+  <section class="title-screen">
+    <div class="wrap">
+      <div class="scene-wrap">
+        <svg class="scene" viewBox="0 0 320 150" shape-rendering="crispEdges" role="img" aria-label="Pixel art of a small town square at dusk: a gazebo with string lights, autumn trees, and a corner coffee diner">
+          <rect width="320" height="150" fill="#2b2650"/>
+          <rect y="70" width="320" height="30" fill="#3b2f5c"/>
+          <rect x="250" y="14" width="14" height="14" fill="#fff3c4"/><rect x="254" y="12" width="6" height="2" fill="#fff3c4"/><rect x="252" y="18" width="4" height="4" fill="#e9dca8"/>
+          <g fill="#fffaf0"><rect x="20" y="10" width="2" height="2"/><rect x="60" y="22" width="2" height="2"/><rect x="110" y="8" width="2" height="2"/><rect x="170" y="18" width="2" height="2"/><rect x="210" y="6" width="2" height="2"/><rect x="290" y="30" width="2" height="2"/></g>
+          <rect y="100" width="320" height="50" fill="#2e5a3c"/>
+          <rect y="118" width="320" height="32" fill="#7a6a58"/>
+          <rect y="124" width="320" height="2" fill="#94836e"/>
+          <!-- trees -->
+          <g><rect x="18" y="78" width="6" height="26" fill="#4a2e1f"/><rect x="6" y="56" width="30" height="26" fill="#e57c2c"/><rect x="10" y="50" width="22" height="8" fill="#b8332f"/><rect x="2" y="66" width="8" height="10" fill="#f0c04a"/></g>
+          <g><rect x="296" y="78" width="6" height="26" fill="#4a2e1f"/><rect x="284" y="54" width="30" height="28" fill="#b8332f"/><rect x="290" y="48" width="18" height="8" fill="#e57c2c"/><rect x="306" y="64" width="10" height="10" fill="#f0c04a"/></g>
+          <g><rect x="62" y="84" width="5" height="20" fill="#4a2e1f"/><rect x="52" y="66" width="24" height="20" fill="#f0c04a"/><rect x="56" y="60" width="16" height="8" fill="#e57c2c"/></g>
+          <!-- gazebo -->
+          <g><rect x="128" y="102" width="64" height="6" fill="#efdcb6"/><rect x="132" y="80" width="4" height="22" fill="#fffaf0"/><rect x="184" y="80" width="4" height="22" fill="#fffaf0"/><rect x="158" y="80" width="4" height="22" fill="#fffaf0"/><rect x="126" y="74" width="68" height="8" fill="#b8332f"/><rect x="134" y="66" width="52" height="8" fill="#b8332f"/><rect x="144" y="58" width="32" height="8" fill="#9c2a27"/><rect x="156" y="52" width="8" height="6" fill="#f0c04a"/><rect x="128" y="94" width="64" height="2" fill="#efdcb6"/></g>
+          <g fill="#f0c04a"><rect x="130" y="84" width="2" height="2"/><rect x="142" y="86" width="2" height="2"/><rect x="154" y="84" width="2" height="2"/><rect x="166" y="86" width="2" height="2"/><rect x="178" y="84" width="2" height="2"/><rect x="188" y="86" width="2" height="2"/></g>
+          <!-- diner -->
+          <g><rect x="214" y="70" width="64" height="48" fill="#4a2e1f"/><rect x="210" y="66" width="72" height="6" fill="#2a1d14"/><rect x="220" y="84" width="22" height="18" fill="#f0c04a"/><rect x="250" y="84" width="22" height="18" fill="#f0c04a"/><rect x="230" y="104" width="12" height="14" fill="#2a1d14"/><rect x="218" y="56" width="56" height="10" fill="#b8332f"/><text x="246" y="64" text-anchor="middle" font-family="monospace" font-size="7" fill="#fffaf0">COFFEE</text><rect x="276" y="76" width="6" height="8" fill="#fffaf0"/><rect x="282" y="78" width="2" height="4" fill="#fffaf0"/></g>
+          <!-- the four quiet heroes on a bench -->
+          <g><rect x="84" y="108" width="40" height="3" fill="#4a2e1f"/><rect x="86" y="111" width="2" height="5" fill="#4a2e1f"/><rect x="120" y="111" width="2" height="5" fill="#4a2e1f"/>
+            <rect x="88" y="98" width="6" height="10" fill="#1f4fd8"/><rect x="89" y="94" width="4" height="4" fill="#f2c9a0"/>
+            <rect x="96" y="98" width="6" height="10" fill="#e3262f"/><rect x="97" y="94" width="4" height="4" fill="#f2c9a0"/>
+            <rect x="104" y="98" width="6" height="10" fill="#13a862"/><rect x="105" y="94" width="4" height="4" fill="#f2c9a0"/>
+            <rect x="112" y="98" width="6" height="10" fill="#7a4fd8"/><rect x="113" y="94" width="4" height="4" fill="#f2c9a0"/>
+            <text x="104" y="90" text-anchor="middle" font-family="monospace" font-size="6" fill="#fffaf0">zzz...</text></g>
+        </svg>
+        <span class="leaf" style="left:12%; animation-duration:9s"></span>
+        <span class="leaf" style="left:38%; animation-duration:12s; animation-delay:-4s"></span>
+        <span class="leaf" style="left:64%; animation-duration:10s; animation-delay:-7s"></span>
+        <span class="leaf" style="left:84%; animation-duration:13s; animation-delay:-2s"></span>
+      </div>
+      <h1 class="pixel">THE CASE OF THE<br>QUIET HEROES</h1>
+      <p class="pixel sub">A ROOK DISPATCH ADVENTURE · RELEASE 4.2 · SIX LEVELS</p>
+      <a class="start pixel" href="#what">▶ PRESS START</a>
+    </div>
+  </section>
+
+  <!-- ================= WHAT HAPPENED ================= -->
+  <section id="what">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">CHAPTER 1</span><h2 class="pixel">WHAT HAPPENED</h2></div>
+      <div class="dialog">
+        <span class="speaker pixel">TOWN NARRATOR</span>
+        <p><b>On 12 August, Release 4.2 cut the time a hero has to answer a callout from 90 seconds to 60.</b> That week, every hero missed more jobs.</p>
+        <p>Dispatch scores a missed job exactly like saying "no", and a miss costs more points than a "yes" earns. Points never come back on their own. So the heroes who missed the most fell to the back of the line, stopped getting offers, and could never earn their way back.</p>
+        <p><b>It wasn't a quiet August.</b> And nobody noticed, because the dashboard said things had "recovered".</p>
+        <span class="next pixel" aria-hidden="true">▼</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>4 of 16</b><span>heroes went from ~12 offers a week to 0–1</span></div>
+        <div class="stat"><b>49 → 3</b><span>offers a week for those four, combined. None recovered.</span></div>
+        <div class="stat"><b>78% → 54%</b><span>jobs accepted, the week 4.2 shipped</span></div>
+        <div class="stat"><b>2 of 4</b><span>stuck heroes never filed a ticket</span></div>
+      </div>
+      <p class="caveat">Source: <code>00-rook/data/callout-history.csv</code>, 29 Jun – 31 Aug. The file's origin isn't documented and Ravi hasn't verified it yet, so treat exact numbers as strong signals, not final figures.</p>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL MAP ================= -->
+  <section id="map">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">WORLD MAP</span><h2 class="pixel">SIX LEVELS, ONE MYSTERY</h2></div>
+      <div class="map">
+        <a class="tile" href="#l1"><span class="lv pixel">LEVEL 1</span><span class="ic" aria-hidden="true">🏠</span><span class="nm pixel">ORIGIN STORY</span><small>Meet the town</small></a>
+        <a class="tile" href="#l2"><span class="lv pixel">LEVEL 2</span><span class="ic" aria-hidden="true">👂</span><span class="nm pixel">SUPER-HEARING</span><small>Two piles of feedback</small></a>
+        <a class="tile" href="#l3"><span class="lv pixel">LEVEL 3</span><span class="ic" aria-hidden="true">⏪</span><span class="nm pixel">REWIND</span><small>The numbers</small></a>
+        <a class="tile" href="#l4"><span class="lv pixel">LEVEL 4</span><span class="ic" aria-hidden="true">🔍</span><span class="nm pixel">X-RAY VISION</span><small>The code</small></a>
+        <a class="tile" href="#l5"><span class="lv pixel">LEVEL 5</span><span class="ic" aria-hidden="true">⚡</span><span class="nm pixel">SUPER-SPEED</span><small>The prototype</small></a>
+        <a class="tile" href="#l6"><span class="lv pixel">LEVEL 6</span><span class="ic" aria-hidden="true">🤝</span><span class="nm pixel">SIDEKICKS</span><small>The skills</small></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 1 ================= -->
+  <section id="l1">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 1</span><h2 class="pixel">ORIGIN STORY</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>Read the tickets and summarize the four interviews to determine if it matches what the data shows and check the routing code.</blockquote>
+          <span class="meta">01-origin-story/prompts.md · prompt 8</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>The first clue: a missed job counts as "no", and it costs more than a "yes" earns.</h3>
+          <p>In the code, running out of time and saying "no" go through the same line (<code>offer.py:30</code>). A miss costs <b>0.12</b>, a yes earns <b>0.08</b>, so a hero needs 6 out of 10 just to stay even, and nothing ever restores points. The same read of the data found four heroes who dropped from ~12 offers a week to almost none.</p>
+          <div class="chips"><span class="chip pixel">offer.py:30</span><span class="chip red pixel">−0.12 / +0.08</span><span class="chip paper pixel">CLAUDE.md</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 2 ================= -->
+  <section id="l2">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 2</span><h2 class="pixel">SUPER-HEARING</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>If both piles are telling the truth, how can they both be right?</blockquote>
+          <span class="meta">02-super-hearing/prompts.md · prompt 16</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>Both piles were right. It was an uneven problem: a few heroes forgotten, others overloaded.</h3>
+          <p>Tickets came from the people who were hurt; the interviews were a mix. Kip handles two heroes in the same city: <b>"Mite thinks Mite's been forgotten. Gale's exhausted."</b></p>
+          <div class="hp" aria-label="Offers per week, before and after 4.2">
+            <div class="hp-row"><span class="nm">Meteor Mite</span><span class="hp-track"><i class="low" style="width:5%"></i></span><span class="num">11 → 1</span></div>
+            <div class="hp-row"><span class="nm">The Gale</span><span class="hp-track"><i class="over" style="width:100%"></i></span><span class="num">13 → 21</span></div>
+          </div>
+          <div class="chips"><span class="chip pixel">interviews-vs-tickets.md</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 3 ================= -->
+  <section id="l3">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 3</span><h2 class="pixel">REWIND</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>If ther Director of Product asked tomoarrow what release 4.2 actually did to responders, what's the one number you'd put in front of her? Post it, and one line on where it came from</blockquote>
+          <span class="meta">03-rewind/prompts.md · prompt 5</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>4 of 16 heroes went from ~12 offers a week to 0–1. Combined: 49 → 3. None recovered.</h3>
+          <div class="bars" aria-label="The four heroes' combined offers per week: 49 before, 43 in the release week, then 16, 6 and 3">
+            <div><b>49</b><i style="height:100px"></i><small>before</small></div>
+            <div><b>43</b><i style="height:88px"></i><small>10 Aug</small></div>
+            <div><b>16</b><i class="hot" style="height:33px"></i><small>17 Aug</small></div>
+            <div><b>6</b><i class="hot" style="height:12px"></i><small>24 Aug</small></div>
+            <div><b>3</b><i class="hot" style="height:6px"></i><small>31 Aug</small></div>
+          </div>
+          <p>Farlight, Meteor Mite, The Undertow, Vesper. Source: the callout history CSV (not yet verified by Ravi).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 4 ================= -->
+  <section id="l4">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 4</span><h2 class="pixel">X-RAY VISION</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>Find me the part of this code that takes points off somebody when they miss a ping or turn one down. Show it to me and explain it in plain English. Then find me every single thing in this code that puts points back on.</blockquote>
+          <span class="meta">04-x-ray-vision/prompts.md · prompt 19</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>There's exactly one way back up: say yes to an offer, which a quiet hero almost never gets.</h3>
+          <div class="coins">
+            <div class="coin plus"><b>+0.08</b><span>a "yes" (the only thing that adds points)</span></div>
+            <div class="coin minus"><b>−0.12</b><span>a "no" <i>or</i> running out of time</span></div>
+          </div>
+          <p>No slow recovery over time (Wen's 2019 note in <code>history.py</code> asked about it and left it out), no reset, and no difference between "no" and "too slow".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 5 ================= -->
+  <section id="l5">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 5</span><h2 class="pixel">SUPER-SPEED</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>One thing I am noticing is that the offer lacks context. I don't know how far this incident is from me. Perhaps the phone was out of reach isn't the right CTA, rather we need a better mechanism to flag a missed opportunity</blockquote>
+          <span class="meta">05-super-speed/prompts.md · prompt 13</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>Every offer now says what, where and how far, and every miss comes back as a "Signal missed" flag with a one-tap reason.</h3>
+          <div class="phone" aria-label="The prototype's signal card and missed-signal flag">
+            <div class="screen">
+              <div class="sig"><span class="t">SIGNAL!</span><span class="w">Building collapse</span><span class="d">9 MIN DRIVE</span><span>4.1 km · Harbor district</span><span class="tm">Leave by 21:24 · arrive by 21:33</span></div>
+              <div class="miss"><div class="h">SIGNAL MISSED</div><div class="b"><span>Away from phone</span><span>Phone didn't alert</span><span>Saw it too late</span><span>On a callout</span><span>Too far</span></div></div>
+            </div>
+          </div>
+          <div class="chips"><a class="chip pixel" href="05-super-speed/prototype.html">PLAY PROTOTYPE ▶</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEVEL 6 ================= -->
+  <section id="l6">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">LEVEL 6</span><h2 class="pixel">SIDEKICKS</h2></div>
+      <div class="level">
+        <div class="scroll">
+          <span class="lbl pixel">YOUR QUEST (EXACT PROMPT)</span>
+          <blockquote>Build the review-checklist skill and test it on the four briefs in 06-sidekicks/briefs/</blockquote>
+          <span class="meta">06-sidekicks/prompts.md · prompt 3</span>
+        </div>
+        <div class="loot">
+          <span class="lbl pixel">LOOT FOUND</span>
+          <h3>A sidekick that checks every brief for an owner, a success measure, a fixed scope, and the problem before the fix.</h3>
+          <p>First run: 4 briefs, 4 flags, one each (no owner · solution first · scope creep · no measure). Its tests score <b>48/48</b>, and it now runs <b>every Monday at about 9 AM</b>.</p>
+          <div class="chips"><span class="chip pixel">4 FLAGS FOUND</span><span class="chip paper pixel">EVALS 48/48</span><span class="chip red pixel">MONDAYS 9 AM</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BOSS ================= -->
+  <section id="boss">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">BOSS FIGHT</span><h2 class="pixel">THE POINTS TRAP</h2></div>
+      <div class="boss">
+        <div class="boss-card">
+          <svg viewBox="0 0 32 32" shape-rendering="crispEdges" role="img" aria-label="Pixel boss: an angry stopwatch">
+            <rect x="12" y="1" width="8" height="3" fill="#b8332f"/><rect x="14" y="4" width="4" height="2" fill="#b8332f"/>
+            <rect x="6" y="6" width="20" height="2" fill="#1b1410"/><rect x="4" y="8" width="24" height="18" fill="#1b1410"/><rect x="6" y="26" width="20" height="2" fill="#1b1410"/>
+            <rect x="6" y="8" width="20" height="18" fill="#f7ecd5"/><rect x="8" y="6" width="16" height="2" fill="#f7ecd5"/><rect x="8" y="26" width="16" height="2" fill="#f7ecd5"/>
+            <rect x="10" y="12" width="4" height="2" fill="#b8332f"/><rect x="18" y="12" width="4" height="2" fill="#b8332f"/><rect x="9" y="11" width="2" height="1" fill="#1b1410"/><rect x="21" y="11" width="2" height="1" fill="#1b1410"/>
+            <rect x="15" y="14" width="2" height="6" fill="#1b1410"/><rect x="17" y="18" width="4" height="2" fill="#1b1410"/>
+            <rect x="11" y="22" width="10" height="2" fill="#1b1410"/>
+          </svg>
+          <span class="pixel nm">THE 60-SECOND STOPWATCH</span>
+          <div class="boss-stats">
+            <div><span>ANSWER TIME</span><span>60s (was 90)</span></div>
+            <div><span>MISS DAMAGE</span><span>−0.12</span></div>
+            <div><span>YES HEALING</span><span>+0.08</span></div>
+            <div><span>REGEN</span><span>NONE</span></div>
+          </div>
+        </div>
+        <div style="display:grid; gap:18px">
+          <div class="steps">
+            <div class="step"><span class="n pixel">HIT 1</span><p><b>Shorter timer.</b> Everyone misses more in the release week: accepted jobs fall from 78% to 54%.</p></div>
+            <div class="step"><span class="n pixel">HIT 2</span><p><b>The points trap.</b> A miss counts like a "no" and costs more than a yes earns. Points never come back.</p></div>
+            <div class="step"><span class="n pixel">HIT 3</span><p><b>Back of the line.</b> Offers go one at a time. At the back, you're only asked when everyone ahead says no.</p></div>
+          </div>
+          <div class="loot">
+            <span class="lbl pixel">VESPER'S HEALTH BAR · OFFERS PER WEEK</span>
+            <div class="bars" style="height:130px" aria-label="Vesper offers per week, 14 down to 1">
+              <div><b>14</b><i style="height:84px"></i></div><div><b>13</b><i style="height:78px"></i></div><div><b>15</b><i style="height:90px"></i></div><div><b>14</b><i style="height:84px"></i></div><div><b>13</b><i style="height:78px"></i></div><div><b>14</b><i style="height:84px"></i></div><div><b>12</b><i class="hot" style="height:72px"></i></div><div><b>5</b><i class="hot" style="height:30px"></i></div><div><b>2</b><i class="hot" style="height:12px"></i></div><div><b>1</b><i class="hot" style="height:6px"></i></div>
+            </div>
+            <p>"By the time he's actually got a thumb on the screen — it's gone." Aunt Dot, Vesper's handler</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE FIX ================= -->
+  <section id="fix">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">POWER-UPS</span><h2 class="pixel">THE FIX: ROOK SIGNAL</h2></div>
+      <div class="dialog">
+        <span class="speaker pixel">YOU (THE NEW PM)</span>
+        <p>We don't revert 4.2 and we don't touch the timer yet. We change the rules and show people what's happening, so nobody gets stuck again and the people affected can see it.</p>
+      </div>
+      <div class="fix-grid">
+        <div class="phone" aria-label="Prototype screen: still lit grace window">
+          <div class="screen">
+            <div class="sig" style="background:#ffcc1f;color:#1b1410"><span class="t" style="color:#b8332f">STILL LIT!</span><span class="w">Building collapse</span><span>Another hero is being asked too. First tap wins.</span><span class="tm" style="background:rgba(0,0,0,.1)">+0:15 to grab it</span></div>
+            <div class="sig" style="background:#13a862"><span class="t">IT'S YOURS!</span><span>Leave by 21:24 · arrive by 21:33</span></div>
+          </div>
+        </div>
+        <div class="inv">
+          <div class="item"><span class="ic" aria-hidden="true">⚖️</span><span class="nm pixel">FAIR SCORE</span><p>A miss costs nothing; a real "no" still counts. The four get a fresh start: "You're back on the list."</p></div>
+          <div class="item"><span class="ic" aria-hidden="true">🗺️</span><span class="nm pixel">THE SIGNAL</span><p>Drive time first, then distance, area, map, skills, and leave-by and arrive-by times.</p></div>
+          <div class="item"><span class="ic" aria-hidden="true">⏳</span><span class="nm pixel">GRACE WINDOW</span><p>15 more seconds after time runs out. Dispatch doesn't slow down.</p></div>
+          <div class="item"><span class="ic" aria-hidden="true">📡</span><span class="nm pixel">SIGNAL MISSED</span><p>Every miss comes back with a one-tap reason, which tells us timer vs phone.</p></div>
+          <div class="item"><span class="ic" aria-hidden="true">🙋</span><span class="nm pixel">PUT ME FIRST</span><p>"I'm free now." First in line within a 15-minute drive. Once every 4 hours.</p></div>
+          <div class="item"><span class="ic" aria-hidden="true">🛰️</span><span class="nm pixel">HANDLER HQ</span><p>Kip sees "Gone quiet" and "Overloaded", with reasons and actions.</p></div>
+        </div>
+      </div>
+      <p class="caveat">The prototype's weekly numbers are real; individual offers are illustrative. The hero feedback that shaped it came from simulated persona sessions, to be confirmed with real heroes through Sofia. <a href="05-super-speed/prototype.html">Play the prototype</a> · <a href="05-super-speed/brief.md">One-pager</a> · <a href="05-super-speed/prd.md">PRD</a> · <a href="05-super-speed/deck.html">Deck</a></p>
+    </div>
+  </section>
+
+  <!-- ================= PARTY ================= -->
+  <section id="party">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">YOUR PARTY</span><h2 class="pixel">HOW IT DOESN'T HAPPEN AGAIN</h2></div>
+      <div class="dialog" style="margin-bottom:28px">
+        <span class="speaker pixel">TOWN NARRATOR</span>
+        <p>4.2 shipped from three one-line roadmap items with <b>no success measure</b>, a "timeout tuning" item with <b>no target</b>, and one committed item that was quietly dropped. Nobody checked how the changes would interact, and the dashboard hid the damage.</p>
+      </div>
+      <div class="party">
+        <div class="member">
+          <span class="nm pixel">REVIEW-CHECKLIST</span>
+          <p style="margin:0;font-size:17px"><b>Guards the gate.</b> Every brief gets four checks before it ships. It would have flagged 4.2's roadmap items for having no owner or measure.</p>
+          <ul><li>Owner named</li><li>Success measure</li><li>Scope stays bounded</li><li>Problem before the fix</li></ul>
+          <div class="meter"><span>Evals: 48/48 checks correct</span><span class="hp-track"><i style="width:100%"></i></span></div>
+          <div class="chips"><span class="chip red pixel">EVERY MONDAY 9 AM</span></div>
+        </div>
+        <div class="member">
+          <span class="nm pixel">RELEASE-INVESTIGATION</span>
+          <p style="margin:0;font-size:17px"><b>Solves the next mystery fast.</b> The same path we took, with every lesson built in: count people not tickets, show the rows behind a number, never trust a rate alone, check what an install resets.</p>
+          <ul><li>Stops after each phase so you can steer</li><li>Stays inside this folder</li><li>Labels anything unverified or simulated</li></ul>
+          <div class="meter"><span>Evals: 30/30 on our own work</span><span class="hp-track"><i style="width:100%"></i></span></div>
+        </div>
+      </div>
+      <div class="quest-log">
+        <div class="chapter" style="margin-top:26px"><span class="tag pixel">QUEST LOG</span></div>
+        <ol>
+          <li><b>1 ORIENT</b>Who, what, which words</li>
+          <li><b>2 LISTEN</b>Themes, counts, quotes</li>
+          <li><b>3 REWIND</b>Before/after, every row</li>
+          <li><b>4 X-RAY</b>The code, in plain words</li>
+          <li><b>5 HYPOTHESIZE</b>If, then, because</li>
+          <li><b>6 DECIDE</b>One-pager, PRD, deck</li>
+          <li><b>7 PROTOTYPE</b>Click it, test it, hand it off</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ENDING ================= -->
+  <section id="end">
+    <div class="wrap">
+      <div class="chapter"><span class="tag pixel">GAME SAVED</span><h2 class="pixel">ACHIEVEMENTS UNLOCKED</h2></div>
+      <div class="ach">
+        <div><span aria-hidden="true">🏆</span><span>Found the 4 heroes nobody was looking for</span></div>
+        <div><span aria-hidden="true">🍂</span><span>Ruled out "just a quiet August"</span></div>
+        <div><span aria-hidden="true">🔍</span><span>Found the one line that traps them</span></div>
+        <div><span aria-hidden="true">⚡</span><span>Built a fix people can click</span></div>
+        <div><span aria-hidden="true">🤝</span><span>Recruited two sidekicks</span></div>
+        <div><span aria-hidden="true">📅</span><span>Set a Monday habit</span></div>
+      </div>
+      <div class="dialog" style="margin-top:30px">
+        <span class="speaker pixel">NEXT QUEST</span>
+        <p><b>Wen:</b> the offer log (sent, reached the phone, seen, answered, seconds) and whether installs reset scores.</p>
+        <p><b>Ravi:</b> what the callout file really counts, and September's numbers.</p>
+        <p><b>Helen:</b> three decisions: misses cost nothing, reset the four now, and tight "put me first" limits.</p>
+      </div>
+      <div class="credits">
+        <span class="pixel">THANKS FOR PLAYING</span>
+        <span>Built with Claude Code for Product School's "Claude Code for PMs" · Rook Industries is a fictional teaching scenario.</span>
+        <span>Every prompt shown is quoted exactly from the module's <code>prompts.md</code>.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var xp = document.getElementById("xp");
+  function update() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    xp.style.width = (max > 0 ? Math.min(100, window.scrollY / max * 100) : 0) + "%";
+  }
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>
